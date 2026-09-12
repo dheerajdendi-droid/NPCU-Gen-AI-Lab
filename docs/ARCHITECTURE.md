@@ -1,9 +1,10 @@
 # Architecture
 
-This document describes the intended architecture and the capabilities implemented through Gate 3.
+This document describes the intended architecture and the capabilities implemented through Gate 4.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
-after live OpenAI and Pinecone verification. Gate 4 and all later capabilities remain plans.
+after live OpenAI and Pinecone verification. Gate 4 grounded generation is implemented with offline
+verification and awaits focused live verification and owner review. Later capabilities remain plans.
 
 ## Capability boundaries
 
@@ -18,7 +19,9 @@ after live OpenAI and Pinecone verification. Gate 4 and all later capabilities r
 4. **Graph** represents and traverses relationships that are awkward to express as document
    similarity or tabular aggregation.
 5. **Orchestration** coordinates capabilities and selects the appropriate execution path.
-6. **Generation** produces grounded, user-facing responses from supplied evidence or results.
+6. **Generation** produces grounded, user-facing responses from supplied evidence. Gate 4 adds one
+   provider-independent generation boundary, an OpenAI Responses adapter, application-side citation
+   validation, and deterministic rendering.
 7. **Evaluation** measures retrieval, grounding, answer quality, and system behavior.
 
 The application domain sits inside these boundaries and does not depend on provider response
@@ -76,3 +79,27 @@ memory, voice, and provider-comparison experiments are added.
 
 Gate 2's chunk_index remains an application-level ordering value. Gate 3 separately introduces
 vector records and the managed provider index; neither changes the stable Gate 2 chunk contract.
+
+## Gate 4 question-to-answer flow
+
+1. GroundedAnswerService validates and normalizes one nonblank question.
+2. The existing Gate 3 service retrieves ten ranked chunks, applying the CURRENT filter unless the
+   caller explicitly requests historical evidence.
+3. The generation prompt serializes those exact results deterministically by retrieval rank and
+   labels their text as untrusted data.
+4. The provider-independent generation boundary receives the question and evidence. Its OpenAI
+   adapter calls `gpt-5.6-terra` through Responses Structured Outputs with low reasoning effort,
+   `store=false`, and no tools.
+5. The adapter returns only an application-owned draft containing status, statements, cited chunk
+   IDs, optional abstention explanation, and provider-independent token counts.
+6. The application rejects IDs outside the exact evidence set and invalid status/content
+   combinations. It never accepts model-authored titles, versions, filenames, statuses, or pages.
+7. Citations are built from RetrievalResult provenance, de-duplicated by first use, numbered
+   deterministically, and rendered with a visible SUPERSEDED label where applicable.
+8. Empty retrieval bypasses generation. Otherwise a validated model abstention returns an explicit
+   insufficient-evidence result with no answer statements or citations.
+
+This is a single-turn application service, not a general orchestrator. The prompt-injection boundary
+is explicit: retrieved text is passed as untrusted reference data and can never directly supply
+authoritative citation metadata. Semantic compliance with instructions still depends on model
+behavior, while application validation constrains every accepted statement to retrieved chunk IDs.

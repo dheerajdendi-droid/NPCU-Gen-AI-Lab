@@ -3,6 +3,10 @@
 import pytest
 from pydantic import SecretStr, ValidationError
 
+from cu_intelligence.generation import (
+    GenerationConfigurationError,
+    load_live_generation_config,
+)
 from cu_intelligence.retrieval import (
     RetrievalConfigurationError,
     load_live_retrieval_config,
@@ -89,3 +93,24 @@ def test_settings_reject_invalid_values(
 
     with pytest.raises(ValidationError):
         Settings(_env_file=None)
+
+
+def test_live_generation_reuses_redacted_openai_environment_setting(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "synthetic-generation-secret")
+
+    config = load_live_generation_config(Settings(_env_file=None))
+
+    assert isinstance(config.api_key, SecretStr)
+    assert config.generation.model == "gpt-5.6-terra"
+    assert "synthetic-generation-secret" not in repr(config)
+
+
+def test_missing_live_generation_setting_fails_without_secret_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    with pytest.raises(GenerationConfigurationError, match="OPENAI_API_KEY"):
+        load_live_generation_config(Settings(_env_file=None))

@@ -80,3 +80,28 @@ implement stale-record deletion.
 
 **Reason:** Identical indexing input updates the same records instead of creating duplicates, and
 the remote index can be recreated without making it a system of record. See ADR 0004.
+
+## DEC-013 — Use one stateless OpenAI generation adapter for Gate 4
+
+**Decision:** Use OpenAI `gpt-5.6-terra` through the Responses API with Structured Outputs, low
+reasoning effort, response storage disabled, and no model tools. Keep these values explicit in one
+generation configuration module and do not provide a model fallback. The provider-independent
+generation boundary receives the original question and ordered Gate 3 retrieval evidence and
+returns an application-owned structured draft.
+
+**Reason:** A single explicit adapter exposes the grounding and structured-response mechanics while
+keeping OpenAI SDK request, response, usage, parsing, and exception types outside application
+contracts. Stateless requests and no tools keep the gate bounded to supplied synthetic evidence.
+
+## DEC-014 — Validate citations and build provenance in the application
+
+**Decision:** Retrieve ten chunks and exclude superseded documents by default. The model may choose
+answer status, factual statement text, and cited retrieved chunk IDs only. The application rejects
+unknown IDs and invalid status/content combinations, normalizes duplicate citations by first use,
+and constructs all title, version, status, filename, chunk, and one-based page metadata from the
+exact `RetrievalResult` set. No-evidence retrieval bypasses generation; otherwise the model may
+return `INSUFFICIENT_EVIDENCE` without an uncalibrated similarity threshold.
+
+**Reason:** Structured syntax alone cannot establish grounding. Application-side validation makes
+the trust boundary explicit, preserves traceability, and prevents model-authored provenance from
+becoming authoritative. See ADR 0005.

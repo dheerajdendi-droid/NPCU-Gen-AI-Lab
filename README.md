@@ -5,10 +5,10 @@ union. All credit-union data used by the project will be synthetic. The reposito
 educational RAG project and an exercise in designing an enterprise GenAI architecture.
 
 Development proceeds through explicit gates so that each layer is understood, tested, and
-documented before the next is introduced. **Gate 0 — Foundation, Gate 1 — Document Ingestion and
-Parsing, and Gate 2 — Deterministic Page-Aware Chunking are accepted.** Gate 3 metadata-aware
-semantic retrieval is also implemented, live-verified, and accepted. Gate 4 has not started.
-Future capabilities described in the architecture are plans, not current features.
+documented before the next is introduced. **Gates 0–3 are accepted.** Gate 4 grounded answer
+generation and page citations are implemented with deterministic verification and await focused
+live verification and owner review. Future capabilities described in the architecture are plans,
+not current features.
 
 ## Delivery outlook
 
@@ -35,6 +35,13 @@ embeds text behind an OpenAI boundary, upserts stable records behind a Pinecone 
 metadata-filtered matches to provider-independent ranked evidence. Normal retrieval excludes
 superseded policies; explicit historical retrieval can include them.
 
+Gate 4 adds one grounded-answer service and one provider-independent generation boundary. The
+OpenAI adapter uses `gpt-5.6-terra` through Responses Structured Outputs with low reasoning effort,
+disabled response storage, and no model tools. The application validates every model-selected chunk
+ID against the exact top-ten retrieval set, builds page citations from RetrievalResult metadata,
+labels superseded evidence, and produces deterministic readable output. Empty evidence bypasses the
+model and returns an explicit insufficient-evidence result.
+
 The version-controlled synthetic corpus baseline contains 11 PDFs, a manifest, explanatory
 documentation, and matching editable Markdown sources. The PDFs are the canonical
 retrieval input; source Markdown must not be indexed alongside them.
@@ -42,8 +49,8 @@ retrieval input; source Markdown must not be indexed alongside them.
 Gate 3 uses OpenAI text-embedding-3-small with explicit 1,536-dimensional output and a Pinecone
 Serverless dense cosine index in AWS us-east-1. Index name, namespace, and credentials are
 environment settings. This managed path is approved for synthetic data only. The project does not
-perform OCR, model-specific chunking, LLM answer generation, RAG prompting, reranking, hybrid
-search, APIs, or user interfaces.
+perform OCR, model-specific chunking, reranking, hybrid search, APIs, user interfaces, general
+orchestration, or Gate 5 evaluation.
 
 ## Local setup
 
@@ -81,6 +88,15 @@ Gate 3 smoke questions. Never commit real credential values.
 
 Gate 3 acceptance verified an index containing 194 vectors in the configured namespace and found
 the expected current document for every named smoke question with one-based page provenance.
+
+The focused Gate 4 live test is separate so it does not re-index the corpus:
+
+```text
+python -m pytest tests/integration/test_live_grounded_generation.py -vv
+```
+
+It requires direct authorization to send the synthetic retrieved evidence and questions to OpenAI
+and Pinecone. It never recreates, deletes, reconfigures, or bulk-upserts the accepted index.
 
 See [the current gate](docs/CURRENT_GATE.md) and [project state](docs/PROJECT_STATE.md) before
 starting any implementation work.
