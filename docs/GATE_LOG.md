@@ -68,3 +68,24 @@ is now required. The complete default suite passed 169 deterministic tests and s
 tests. Explicit live collection selected both tests without executing them. Ruff, dependency,
 editable-import, whitespace, credential, and scope checks passed. The owner formally accepted Gate 4
 on **2026-09-12**. Gate 5 has not started.
+
+## Gate 5 — IMPLEMENTED, PENDING OWNER REVIEW AND LIVE BASELINE
+
+Started on **2026-09-12** from clean, synchronized commit `0126705`. The accepted Gate 4 baseline
+was reproduced with 169 deterministic tests passing and both live tests skipped. Gate 5 will add a
+local provider-independent evaluation harness, twenty protected synthetic cases, separate retrieval
+and answer measures, explicit zero denominators, deterministic reports and fingerprints, distinct
+human review, and an authorization-gated read-only live test. Retrieval and generation tuning are
+excluded while the baseline is established. Gate 5 is not accepted, and Gate 6 has not started.
+
+Implementation completed locally on **2026-09-12** with 20 human-traced synthetic cases: 12
+current-policy cases covering every current document, three multi-document cases, three unsupported
+or adversarial cases, and two current-versus-superseded Lending comparisons. The harness validates
+dataset provenance, calculates separate retrieval and grounded-answer measures, preserves zero
+denominators, renders deterministic JSON and Markdown, produces three SHA-256 fingerprints, and
+keeps 0–2 human ratings separate from automated results.
+
+The complete deterministic suite passes 202 tests and skips all three live tests by default. The
+Gate 5 live evaluator is collected only with `--run-live`, records one retrieval per case, and
+cannot create, upsert, update or delete Pinecone data. It has not been executed. Gate 5 remains
+pending owner review and separately authorized live evaluation; Gate 6 has not started.

@@ -151,3 +151,40 @@ factual implementation findings without inventing personal reflections.
 - A pytest marker describes a test but does not disable it. A collection hook requiring
   `--run-live` is needed so the presence of credentials cannot accidentally authorize provider
   calls or cost.
+
+## Gate 5 learning objectives
+
+- Understand why retrieval quality and answer quality require separate measures
+- Understand Hit@K, reciprocal rank, multi-document recall, and page-evidence recall
+- Understand citation precision and recall against declared evidence expectations
+- Understand why zero denominators must remain visible rather than becoming misleading scores
+- Understand the boundary between automated structural checks and human semantic review
+- Understand how canonical serialization produces stable dataset, corpus, and configuration
+  fingerprints
+- Understand how evaluation ground truth can leak into a retrieval corpus if directories are not
+  explicitly separated and tested
+- Understand why baseline measurement precedes retrieval or prompt tuning
+- Understand deterministic offline evaluation versus an authorization-gated live baseline
+
+These are learning objectives and do not claim personal mastery. Implementation observations will
+record concrete findings without inventing personal reflections.
+
+## Gate 5 implementation observations
+
+- A relevance-free unsupported case cannot use Hit@K or reciprocal rank honestly; retaining a zero
+  denominator and null value distinguishes “not applicable” from a retrieval miss.
+- Multi-document recall must compare distinct document IDs rather than chunk counts because several
+  highly ranked chunks from one policy do not satisfy a cross-policy evidence requirement.
+- Citation validity, document precision and document recall answer different questions. A citation
+  can be a valid retrieved chunk while still coming from a document the case did not allow.
+- Recording retrieval inside the grounded-answer call lets evaluation reuse the exact evidence sent
+  to generation instead of paying for or comparing against a second, potentially different query.
+- Canonical JSON with sorted keys and compact separators provides stable SHA-256 fingerprints while
+  excluding credentials, deployment names, latency and provider objects.
+- The protected JSON contains questions and reference facts, but canonical ingestion still accepts
+  only manifest-listed PDFs. Regression tests verify that indexing inputs and evidence provenance
+  remain the 194 PDF-derived chunks.
+- Automated checks can assess declared status, citations and provenance, but cannot establish that
+  prose is fully correct or complete. The separate 0–2 human template preserves that responsibility.
+- A read-only Pinecone wrapper that exposes describe and query but no create or upsert operation
+  makes the live evaluation mutation boundary executable rather than merely documentary.

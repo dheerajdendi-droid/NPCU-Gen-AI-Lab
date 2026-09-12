@@ -1,11 +1,11 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 4 — Grounded Answer Generation and Page Citations — formally accepted on
-  2026-09-12; Gate 5 has not started
-- **Current implementation:** Capabilities accepted through Gate 4, including provider-independent
-  grounded generation, Structured Outputs mapping, evidence validation, and deterministic page
-  citations
+- **Current gate:** Gate 5 — Retrieval and Grounded Answer Evaluation — implemented pending owner
+  review and a separately authorized live baseline
+- **Current implementation:** Capabilities accepted through Gate 4 plus a provider-independent local
+  evaluation harness, protected synthetic cases, deterministic metrics, human-review templates,
+  reports, and fingerprints
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small`, Pinecone Serverless, and
   a live-verified OpenAI `gpt-5.6-terra` Responses adapter
 
@@ -32,7 +32,18 @@ existing 194-vector Pinecone namespace without indexing or modifying remote stat
 answers cited application-owned page provenance, the unsupported question returned insufficient
 evidence without citations, and the historical Lending comparison cited both current v4.0 and
 superseded v3.1 with explicit status labelling. The owner formally accepted Gate 4 on 2026-09-12.
-Gate 5 has not started.
+
+Gate 5 started on 2026-09-12 from clean, synchronized commit `0126705`. Its accepted scope is a
+local provider-independent evaluation harness, twenty protected synthetic cases, separate retrieval
+and grounded-answer measures, deterministic reports and fingerprints, distinct human review, and
+one explicitly authorized read-only live baseline. No retrieval or generation tuning, hosted eval
+service, LLM judge, framework, or new dependency is planned. Gate 6 has not started.
+
+Gate 5 implementation now contains 20 validated cases with the required 12 current, three
+multi-document, three unsupported/adversarial and two historical split. The complete deterministic
+suite passes 202 tests and skips three live tests by default. The read-only Gate 5 live test is
+implemented but has not run; it requires direct authorization and `--run-live`. Gate 5 is not
+formally accepted, and Gate 6 has not started.
 
 ## Planned future capability areas
 

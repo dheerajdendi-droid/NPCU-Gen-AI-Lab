@@ -105,3 +105,15 @@ return `INSUFFICIENT_EVIDENCE` without an uncalibrated similarity threshold.
 **Reason:** Structured syntax alone cannot establish grounding. Application-side validation makes
 the trust boundary explicit, preserves traceability, and prevents model-authored provenance from
 becoming authoritative. See ADR 0005.
+
+## DEC-015 — Evaluate retrieval and grounded answers separately with a local harness
+
+**Decision:** Use a version-controlled synthetic dataset and a provider-independent local evaluation
+harness. Score retrieval rankings before separately scoring answer status, citations, provenance,
+and version handling. Express ratios with explicit numerators and denominators, keep 0–2 human
+review separate from automated measures, and fingerprint canonical dataset, corpus, and public
+configuration content with SHA-256. Evaluation data is never corpus or answer evidence.
+
+**Reason:** Retrieval and generation have different failure modes, and transparent local metrics
+make those mechanics inspectable without a hosted evaluation service, LLM judge, new framework, or
+new dependency. See ADR 0006.

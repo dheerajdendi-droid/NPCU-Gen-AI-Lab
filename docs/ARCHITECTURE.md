@@ -1,11 +1,13 @@
 # Architecture
 
-This document describes the intended architecture and the capabilities implemented through Gate 4.
+This document describes the intended architecture, the capabilities accepted through Gate 4, and
+the Gate 5 evaluation capability implemented pending owner review and live verification.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
 after live OpenAI and Pinecone verification. Gate 4 grounded generation is accepted after offline
-verification, a focused six-scenario live test, and owner review. Later capabilities remain plans;
-Gate 5 has not started.
+verification, a focused six-scenario live test, and owner review. Gate 5 adds a local evaluation
+boundary without changing retrieval or generation. Later capabilities remain plans; Gate 6 has not
+started.
 
 ## Capability boundaries
 
@@ -24,6 +26,9 @@ Gate 5 has not started.
    provider-independent generation boundary, an OpenAI Responses adapter, application-side citation
    validation, and deterministic rendering.
 7. **Evaluation** measures retrieval, grounding, answer quality, and system behavior.
+   Gate 5 keeps a protected synthetic case dataset outside ingestion, scores retrieval and grounded
+   answers separately, records distinct human review, and emits provider-independent reports and
+   fingerprints.
 
 The application domain sits inside these boundaries and does not depend on provider response
 types. OpenAI and Pinecone adapters map SDK objects to application-owned vectors, records, matches,
@@ -104,3 +109,26 @@ This is a single-turn application service, not a general orchestrator. The promp
 is explicit: retrieved text is passed as untrusted reference data and can never directly supply
 authoritative citation metadata. Semantic compliance with instructions still depends on model
 behavior, while application validation constrains every accepted statement to retrieved chunk IDs.
+
+## Gate 5 evaluation flow
+
+1. The protected loader reads strict JSON only from `data/_evaluation_do_not_index` and validates
+   every case against the canonical CorpusBuild document IDs, statuses and populated pages.
+2. One evaluator call sends the case question through the accepted GroundedAnswerService. A small
+   recording retriever captures the exact single retrieval used for generation.
+3. Retrieval scoring measures document hits at fixed depths, reciprocal rank, distinct-document
+   recall, page evidence and explicit document/status/duplicate/rank violations.
+4. Answer scoring separately compares result status and citations with the case expectations and
+   exact recorded evidence. Application-owned provenance remains authoritative.
+5. Aggregate scores sum numerators and denominators. Zero denominators remain null and render as
+   `N/A` rather than becoming misleading scores.
+6. The report retains provider-independent evidence identities, answers, token usage, latency and
+   safe failures. Human 0–2 ratings and disposition remain separate.
+7. Canonical JSON produces stable dataset, corpus and public-configuration SHA-256 fingerprints.
+8. Offline fakes exercise the complete path. The marked live test may query the accepted Pinecone
+   namespace and OpenAI only after `--run-live` and direct authorization; its Pinecone surface has
+   no mutation method.
+
+Evaluation questions and reference facts are not corpus documents. They are never parsed, chunked,
+indexed or supplied as answer evidence. Gate 5 establishes a small synthetic baseline and does not
+claim production accuracy or tune the accepted system.

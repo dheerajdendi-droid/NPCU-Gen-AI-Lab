@@ -7,8 +7,9 @@ educational RAG project and an exercise in designing an enterprise GenAI archite
 Development proceeds through explicit gates so that each layer is understood, tested, and
 documented before the next is introduced. **Gates 0–4 are accepted.** Gate 4 grounded answer
 generation and page citations passed deterministic and focused live verification before owner
-acceptance. Gate 5 has not started; future capabilities described in the architecture are plans,
-not current features.
+acceptance. Gate 5 evaluation is implemented pending owner review and a separately authorized live
+baseline; Gate 6 has not started. Future capabilities described in the architecture are plans, not
+current features.
 
 ## Delivery outlook
 
@@ -42,6 +43,12 @@ ID against the exact top-ten retrieval set, builds page citations from Retrieval
 labels superseded evidence, and produces deterministic readable output. Empty evidence bypasses the
 model and returns an explicit insufficient-evidence result.
 
+Gate 5 adds a protected 20-case synthetic evaluation dataset and a provider-independent local
+harness. It measures retrieval rankings separately from answer status, citation validity,
+provenance and version handling; renders deterministic JSON and Markdown; provides separate 0–2
+human-review templates; and fingerprints the dataset, corpus and public configuration. It does not
+tune retrieval or prompting and does not use an LLM judge.
+
 The version-controlled synthetic corpus baseline contains 11 PDFs, a manifest, explanatory
 documentation, and matching editable Markdown sources. The PDFs are the canonical
 retrieval input; source Markdown must not be indexed alongside them.
@@ -50,7 +57,7 @@ Gate 3 uses OpenAI text-embedding-3-small with explicit 1,536-dimensional output
 Serverless dense cosine index in AWS us-east-1. Index name, namespace, and credentials are
 environment settings. This managed path is approved for synthetic data only. The project does not
 perform OCR, model-specific chunking, reranking, hybrid search, APIs, user interfaces, general
-orchestration, or Gate 5 evaluation.
+orchestration, or Gate 6 functionality.
 
 ## Local setup
 
@@ -102,6 +109,14 @@ python -m pytest --run-live tests/integration/test_live_grounded_generation.py -
 
 It requires direct authorization to send the synthetic retrieved evidence and questions to OpenAI
 and Pinecone. It never recreates, deletes, reconfigures, or bulk-upserts the accepted index.
+
+The Gate 5 live baseline is also separate and keeps Pinecone read-only. It must not run without
+direct authorization for its 20 questions, retrieved synthetic evidence, provider cost, and remote
+queries:
+
+```text
+python -m pytest --run-live tests/integration/test_live_evaluation.py -vv -s
+```
 
 See [the current gate](docs/CURRENT_GATE.md) and [project state](docs/PROJECT_STATE.md) before
 starting any implementation work.
