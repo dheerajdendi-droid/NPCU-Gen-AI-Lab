@@ -5,9 +5,9 @@ union. All credit-union data used by the project will be synthetic. The reposito
 educational RAG project and an exercise in designing an enterprise GenAI architecture.
 
 Development proceeds through explicit gates so that each layer is understood, tested, and
-documented before the next is introduced. **Gates 0–3 are accepted.** Gate 4 grounded answer
-generation and page citations are implemented with deterministic verification and await focused
-live verification and owner review. Future capabilities described in the architecture are plans,
+documented before the next is introduced. **Gates 0–4 are accepted.** Gate 4 grounded answer
+generation and page citations passed deterministic and focused live verification before owner
+acceptance. Gate 5 has not started; future capabilities described in the architecture are plans,
 not current features.
 
 ## Delivery outlook

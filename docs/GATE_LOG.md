@@ -42,7 +42,7 @@ The live test emitted two non-functional Windows pytest-cache permission warning
 deterministic suite still passed 130 tests, and all final lint, dependency, import, whitespace,
 secret, and scope checks passed. Gate 4 has not started.
 
-## Gate 4 — DETERMINISTIC IMPLEMENTATION COMPLETE, PENDING LIVE VERIFICATION AND OWNER REVIEW
+## Gate 4 — ACCEPTED
 
 Started on **2026-09-12** after the accepted Gate 3 baseline was confirmed clean and synchronized.
 The deterministic baseline passed 130 tests, Ruff, dependency health, editable imports, and
@@ -55,8 +55,16 @@ ten chunks, validates the structured draft against the exact evidence IDs, const
 page citations, supports explicit historical retrieval, and abstains safely. The final deterministic
 suite contains 169 passing non-live tests and two deselected live tests.
 
-The focused Gate 4 live test is present but did not execute. The execution safety layer rejected the
-external call because authorization to send repository-derived synthetic evidence was supplied in
-an attached brief rather than a direct active-message approval. No Gate 4 generation API call was
-made, no actual live answer exists yet, and Pinecone remote state was not changed. Gate 4 is not
-accepted; direct live-test authorization and owner review remain required. Gate 5 has not started.
+After direct authorization, the focused live Gate 4 test passed on **2026-09-12**. It inspected the
+existing namespace's 194-vector count, issued six query embeddings and read-only Pinecone queries,
+and generated six `gpt-5.6-terra` Structured Outputs without rebuilding or changing the index. The
+four current-policy questions produced grounded answers with application-owned positive page
+citations; the unsupported question abstained without citations; and the historical Lending answer
+cited current v4.0 and superseded v3.1 with explicit `SUPERSEDED` labelling. Generation used 24,374
+input tokens and 1,889 output tokens.
+
+Before acceptance, pytest was changed so credentials alone cannot activate live tests: `--run-live`
+is now required. The complete default suite passed 169 deterministic tests and skipped both live
+tests. Explicit live collection selected both tests without executing them. Ruff, dependency,
+editable-import, whitespace, credential, and scope checks passed. The owner formally accepted Gate 4
+on **2026-09-12**. Gate 5 has not started.

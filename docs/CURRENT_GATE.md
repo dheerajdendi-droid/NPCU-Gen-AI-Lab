@@ -2,7 +2,8 @@
 
 Gate 4 started on **2026-09-12** after the accepted Gate 3 baseline was reverified locally and the
 existing Pinecone namespace was confirmed ready with the accepted 194-vector synthetic corpus.
-Gate 4 is not formally accepted; acceptance remains pending owner review of real-provider answers.
+The focused live test subsequently passed, the owner reviewed its answers and citations, and Gate 4
+was formally accepted on **2026-09-12**. Gate 5 has not started.
 
 ## Objective
 
@@ -143,17 +144,21 @@ python -m pytest --run-live tests/integration/test_live_grounded_generation.py -
 - [x] Current-only behavior is default and historical evidence is labelled clearly
 - [x] Prompt construction is deterministic and instruction-like evidence is treated as untrusted data
 - [x] Focused deterministic unit and end-to-end integration tests pass
-- [x] The focused real-provider test passes, or its exact external blocker is documented
-- [ ] Actual live answers and citations are retained for owner review
+- [x] The focused real-provider test passes
+- [x] Actual live answers and citations are retained for owner review
 - [x] Ruff, dependencies, imports, whitespace, secret, and scope checks pass
 - [x] Documentation describes actual implementation behavior
 - [x] One local implementation commit contains only Gate 4 work
 - [x] Gate 5 has not started
 
-The real-provider criterion is currently blocked before execution: the execution safety layer
-requires a direct active-message authorization to disclose repository-derived synthetic evidence,
-whereas the first authorization was contained in an attached brief. No Gate 4 provider request was
-made. The live test and owner-review evidence therefore remain incomplete.
+The focused live test passed one OpenAI/Pinecone question-to-answer flow containing six scenarios.
+It confirmed the existing namespace contained 194 vectors, made no indexing or Pinecone mutation,
+and used 24,374 input tokens plus 1,889 output tokens across six `gpt-5.6-terra` responses. Four
+current-policy questions returned grounded answers with positive one-based page citations, the
+unsupported question returned `INSUFFICIENT_EVIDENCE` without citations, and the historical Lending
+comparison cited current v4.0 and superseded v3.1 with a visible `SUPERSEDED` label.
 
-Gate 4 must remain **implemented pending owner review** even if every exit criterion is demonstrated.
-Only the owner may formally accept it.
+Final pre-acceptance safety verification demonstrated 169 deterministic tests passing with both
+live tests skipped by default. Explicit `--run-live --collect-only` selection found both live tests
+without executing them. Ruff, dependency health, editable imports, whitespace, credential, and
+scope checks passed. The owner formally accepted Gate 4 on **2026-09-12**. Gate 5 has not started.

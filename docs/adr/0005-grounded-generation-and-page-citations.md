@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for Gate 4 implementation on 2026-09-12. Formal Gate 4 acceptance remains pending owner
-review of the live answers and citations.
+Accepted for Gate 4 implementation on 2026-09-12 and formally accepted on the same date after the
+focused live OpenAI/Pinecone test passed and the owner reviewed its answers and citations.
 
 ## Context
 

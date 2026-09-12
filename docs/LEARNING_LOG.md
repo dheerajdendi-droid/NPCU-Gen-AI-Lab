@@ -141,3 +141,13 @@ factual implementation findings without inventing personal reflections.
   using a control wrapper that has no creation path.
 - The first live-test attempt made no provider call because the execution safety layer required
   direct active-message permission to disclose repository-derived synthetic evidence.
+- The authorized focused live test exercised six query-to-answer scenarios without rebuilding or
+  mutating the existing 194-vector index. Every answered statement retained application-validated
+  chunk citations and positive one-based page provenance.
+- The unsupported synthetic question produced `INSUFFICIENT_EVIDENCE` without citations, while the
+  historical Lending comparison cited both v4.0 and v3.1 and labelled v3.1 `SUPERSEDED`.
+- The six live generation responses used 24,374 input tokens and 1,889 output tokens. Provider usage
+  can therefore be retained for cost learning without exposing provider response objects.
+- A pytest marker describes a test but does not disable it. A collection hook requiring
+  `--run-live` is needed so the presence of credentials cannot accidentally authorize provider
+  calls or cost.

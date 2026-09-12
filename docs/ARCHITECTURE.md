@@ -3,8 +3,9 @@
 This document describes the intended architecture and the capabilities implemented through Gate 4.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
-after live OpenAI and Pinecone verification. Gate 4 grounded generation is implemented with offline
-verification and awaits focused live verification and owner review. Later capabilities remain plans.
+after live OpenAI and Pinecone verification. Gate 4 grounded generation is accepted after offline
+verification, a focused six-scenario live test, and owner review. Later capabilities remain plans;
+Gate 5 has not started.
 
 ## Capability boundaries
 
