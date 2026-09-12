@@ -73,14 +73,19 @@ python -m pip install -e ".[dev]"
 Run the tests and lint checks:
 
 ```text
-python -m pytest -m "not live"
+python -m pytest
 python -m ruff check .
 ```
 
-Normal tests use deterministic providers and require no network or credentials. To run the
-explicit real-provider smoke test, configure OPENAI_API_KEY, PINECONE_API_KEY,
-PINECONE_INDEX_NAME, and PINECONE_NAMESPACE in the environment or an ignored .env, then run
-python -m pytest -m live.
+Normal tests use deterministic providers and require no network or credentials. Pytest skips every
+test marked `live` unless the command includes `--run-live`; credentials alone never opt in. To run
+the Gate 3 real-provider smoke test, configure OPENAI_API_KEY, PINECONE_API_KEY,
+PINECONE_INDEX_NAME, and PINECONE_NAMESPACE in the environment or an ignored .env, obtain the
+required authorization, then run:
+
+```text
+python -m pytest --run-live tests/integration/test_live_semantic_retrieval.py -vv
+```
 
 That live test is the tracked provider-verification path. It first checks the approved
 dense/1,536/cosine/AWS/us-east-1 configuration, indexes the synthetic PDFs, and runs the named
@@ -92,7 +97,7 @@ the expected current document for every named smoke question with one-based page
 The focused Gate 4 live test is separate so it does not re-index the corpus:
 
 ```text
-python -m pytest tests/integration/test_live_grounded_generation.py -vv
+python -m pytest --run-live tests/integration/test_live_grounded_generation.py -vv
 ```
 
 It requires direct authorization to send the synthetic retrieved evidence and questions to OpenAI

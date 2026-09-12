@@ -113,6 +113,13 @@ affordability, vulnerable members, supplier change, an unsupported question, and
 Lending v4.0 versus superseded v3.1 comparison. Assertions concern grounding and provenance
 invariants, not exact prose or similarity scores.
 
+Pytest skips all tests marked `live` unless the command includes the explicit `--run-live` option;
+configured credentials alone never authorize provider calls. The focused command is:
+
+```text
+python -m pytest --run-live tests/integration/test_live_grounded_generation.py -vv
+```
+
 ## Out of scope
 
 - Retrieval reranking, lexical or hybrid search, similarity-threshold calibration
