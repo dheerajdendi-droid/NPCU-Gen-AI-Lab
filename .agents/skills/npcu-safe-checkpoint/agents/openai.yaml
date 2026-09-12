@@ -1,0 +1,6 @@
+interface:
+  display_name: "NPCU Safe Checkpoint"
+  short_description: "Verify and prepare a safe local Git checkpoint"
+  default_prompt: "Use $npcu-safe-checkpoint to verify and prepare this Gate checkpoint safely."
+policy:
+  allow_implicit_invocation: false

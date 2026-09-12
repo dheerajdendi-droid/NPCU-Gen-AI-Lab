@@ -1,0 +1,4 @@
+interface:
+  display_name: "NPCU Grounding Audit"
+  short_description: "Audit answer grounding and citation provenance"
+  default_prompt: "Use $npcu-grounding-audit to audit this grounded answer and its citations."

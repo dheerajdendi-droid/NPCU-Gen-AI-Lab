@@ -1,0 +1,4 @@
+interface:
+  display_name: "NPCU Gate Review"
+  short_description: "Review gate readiness without changing the project"
+  default_prompt: "Use $npcu-gate-review to review the current Gate and report its readiness."

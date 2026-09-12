@@ -1,0 +1,6 @@
+interface:
+  display_name: "NPCU Live Provider Smoke"
+  short_description: "Run explicitly approved live provider smoke tests"
+  default_prompt: "Use $npcu-live-provider-smoke to run the explicitly authorized live test."
+policy:
+  allow_implicit_invocation: false
