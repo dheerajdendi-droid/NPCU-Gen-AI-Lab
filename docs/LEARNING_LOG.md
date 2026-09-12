@@ -95,6 +95,13 @@ factual implementation findings without inventing personal reflections.
   superseded matches after ranking.
 - Deterministic keyword embeddings and an in-memory cosine index can validate mapping, filtering,
   ranking, and provenance without claiming to reproduce real model quality.
-- OpenAI and Pinecone settings were absent during completion, so no live requests or index creation
-  occurred; the explicit smoke test remains pending configured credentials, index name, and
-  namespace.
+- The live adapter validated a ready dense 1,536-dimensional cosine index in AWS us-east-1, and the
+  configured namespace reported exactly 194 records after idempotent upsert.
+- The four named live queries found their expected current document at ranks 1, 1, 6, and 1 while
+  retaining one-based page provenance. This demonstrates a working retrieval path without claiming
+  comprehensive retrieval quality.
+- The explicit historical query found both Lending v4.0 and superseded v3.1, while normal queries
+  returned only CURRENT results.
+- Provider verification can succeed even when local test tooling emits unrelated cache warnings;
+  the live run's two warnings concerned Windows pytest-cache write permissions, not OpenAI,
+  Pinecone, metadata, or retrieval behavior.

@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for Gate 3 implementation on 2026-09-12. Gate 3 itself remains pending formal owner
-acceptance.
+Accepted for Gate 3 implementation and verified through live OpenAI and Pinecone operations on
+2026-09-12. Gate 3 was formally accepted on the same date.
 
 ## Context
 

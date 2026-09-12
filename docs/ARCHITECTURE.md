@@ -2,9 +2,8 @@
 
 This document describes the intended architecture and the capabilities implemented through Gate 3.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
-accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented locally and
-awaiting live-provider verification and formal owner acceptance. All later capabilities remain
-plans.
+accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
+after live OpenAI and Pinecone verification. Gate 4 and all later capabilities remain plans.
 
 ## Capability boundaries
 

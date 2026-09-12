@@ -19,7 +19,7 @@ passed; Ruff, dependency health, editable-package import, diff, secret, and scop
 and the 11-document corpus smoke test produced 81 source pages and 194 chunks using
 `max_words=300` and `overlap_words=50`, with document and page provenance intact.
 
-## Gate 3 — IN PROGRESS
+## Gate 3 — ACCEPTED
 
 Started on **2026-09-12** after Gate 2 baseline verification. The owner approved OpenAI
 `text-embedding-3-small` with explicit 1,536-dimensional output and a Pinecone Serverless dense
@@ -31,5 +31,13 @@ repeat indexing retained 194 stable IDs; named policy queries returned provenanc
 and current-only versus explicit superseded retrieval passed. Ruff, dependency health, editable
 imports, whitespace, secret, and scope checks passed.
 
-The live environment settings were absent, so no OpenAI or Pinecone call was made and no index was
-created. Gate 3 remains pending that explicit smoke test, final owner review, and formal acceptance.
+Formally accepted on **2026-09-12** after the real-provider test passed. The configured Pinecone
+Serverless index was ready with dense vectors, 1,536 dimensions, cosine similarity, AWS
+`us-east-1`, and exactly 194 records in the configured namespace. Every named live query found
+its expected current document with page provenance: member eligibility rank 1/page 3, lending
+affordability rank 1/page 5, vulnerable members rank 6/page 5, and supplier change rank 1/page 4.
+An explicit historical query found both Lending v4.0 and superseded v3.1.
+
+The live test emitted two non-functional Windows pytest-cache permission warnings. The final
+deterministic suite still passed 130 tests, and all final lint, dependency, import, whitespace,
+secret, and scope checks passed. Gate 4 has not started.

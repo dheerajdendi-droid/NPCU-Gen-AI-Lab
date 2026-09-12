@@ -1,21 +1,25 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 3 — Metadata-Aware Embeddings and Semantic Retrieval — In progress
-- **Current implementation:** Gate 0–2 capabilities accepted; Gate 3 provider-independent path and
-  provider adapters implemented locally, with live smoke verification pending
+- **Current gate:** Gate 3 — Metadata-Aware Embeddings and Semantic Retrieval — Accepted
+- **Current implementation:** Foundation, page-aware ingestion, deterministic chunking, manifest
+  enrichment, embeddings, vector indexing, and semantic retrieval accepted through Gate 3
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small` and Pinecone Serverless
 
 Gate 0 and Gate 1 were formally accepted on 2026-09-10. Gate 2 was formally accepted on
 2026-09-12. Gate 3 started on 2026-09-12 after the owner approved an OpenAI embedding and Pinecone
 vector-index stack for the synthetic-only corpus. Manifest validation, PDF-to-chunk enrichment,
 embedding and vector-index boundaries, idempotent indexing, metadata-filtered retrieval, and
-provider-independent results are implemented. All deterministic verification passes. No live
-provider call or Pinecone index creation occurred because the four live environment settings were
-not available. Gate 3 is not accepted; the explicit live smoke test and owner review remain.
+provider-independent results are implemented. The live OpenAI/Pinecone path passed and Gate 3 was
+formally accepted on 2026-09-12.
 
 Current deterministic evidence: 130 non-live tests pass over the 11-PDF, 81-page, 194-chunk corpus;
-Ruff and installed-dependency health checks pass; editable-package imports resolve correctly.
+Ruff and installed-dependency health checks pass; editable-package imports resolve correctly. The
+configured Pinecone namespace contains 194 vectors, all named current-policy retrieval questions
+found their expected documents with page provenance, and explicit historical retrieval found both
+Lending v4.0 and superseded v3.1.
+
+Gate 4 has not started. The project is awaiting explicit Gate 4 initiation.
 
 ## Planned future capability areas
 

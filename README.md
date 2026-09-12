@@ -7,8 +7,8 @@ educational RAG project and an exercise in designing an enterprise GenAI archite
 Development proceeds through explicit gates so that each layer is understood, tested, and
 documented before the next is introduced. **Gate 0 — Foundation, Gate 1 — Document Ingestion and
 Parsing, and Gate 2 — Deterministic Page-Aware Chunking are accepted.** Gate 3 metadata-aware
-semantic retrieval is implemented locally, pending live-provider verification and formal owner
-acceptance. Future capabilities described in the architecture are plans, not current features.
+semantic retrieval is also implemented, live-verified, and accepted. Gate 4 has not started.
+Future capabilities described in the architecture are plans, not current features.
 
 ## Delivery outlook
 
@@ -75,9 +75,12 @@ explicit real-provider smoke test, configure OPENAI_API_KEY, PINECONE_API_KEY,
 PINECONE_INDEX_NAME, and PINECONE_NAMESPACE in the environment or an ignored .env, then run
 python -m pytest -m live.
 
-That live test is the only path that may create or access the configured Pinecone index. It first
-checks the approved dense/1,536/cosine/AWS/us-east-1 configuration, indexes the synthetic PDFs, and
-runs the named Gate 3 smoke questions. Never commit real credential values.
+That live test is the tracked provider-verification path. It first checks the approved
+dense/1,536/cosine/AWS/us-east-1 configuration, indexes the synthetic PDFs, and runs the named
+Gate 3 smoke questions. Never commit real credential values.
+
+Gate 3 acceptance verified an index containing 194 vectors in the configured namespace and found
+the expected current document for every named smoke question with one-based page provenance.
 
 See [the current gate](docs/CURRENT_GATE.md) and [project state](docs/PROJECT_STATE.md) before
 starting any implementation work.

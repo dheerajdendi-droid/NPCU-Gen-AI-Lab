@@ -1,9 +1,9 @@
-# Gate 3 — Metadata-Aware Embeddings and Semantic Retrieval — IN PROGRESS
+# Gate 3 — Metadata-Aware Embeddings and Semantic Retrieval — ACCEPTED
 
-Gate 3 started on **2026-09-12** after the accepted Gate 2 baseline was reverified. The project
-owner approved OpenAI `text-embedding-3-small` with explicit 1,536-dimensional output and a
-Pinecone Serverless dense index using cosine similarity in AWS `us-east-1` for the synthetic-only
-corpus. Gate 3 must remain pending formal owner acceptance after implementation.
+Gate 3 started and was formally accepted on **2026-09-12** after the accepted Gate 2 baseline was
+reverified. The project owner approved OpenAI `text-embedding-3-small` with explicit
+1,536-dimensional output and a Pinecone Serverless dense index using cosine similarity in AWS
+`us-east-1` for the synthetic-only corpus.
 
 ## Objective
 
@@ -99,6 +99,22 @@ Indexing returns a provider-independent summary containing document, chunk, and 
 Retrieval returns ranked values containing chunk ID, document ID, chunk text, one-based page
 number, title, version, document status, source filename, rank, and similarity score.
 
+## Acceptance evidence
+
+- All four required live settings were present through the normal Settings path, and `.env` was
+  confirmed ignored without revealing any values.
+- The explicit live test passed: one test selected and 130 deterministic tests deselected.
+- The configured Pinecone index reported dense vectors, 1,536 dimensions, cosine similarity, AWS,
+  `us-east-1`, ready status, and exactly 194 vectors in the configured namespace.
+- All named current-policy queries returned ten CURRENT results and found their expected document:
+  member eligibility at rank 1/page 3, lending affordability at rank 1/page 5, vulnerable members
+  at rank 6/page 5, and supplier change at rank 1/page 4.
+- Explicit historical Lending retrieval found both current v4.0 and superseded v3.1.
+- The deterministic suite passed 130 tests with the live test deselected.
+- Ruff, dependency health, editable imports, whitespace, secret, and out-of-scope scans passed.
+- The live run emitted two local PytestCacheWarning messages because the elevated Windows process
+  could not write pytest cache files; these did not affect providers, retrieval, or test results.
+
 ## Exit criteria
 
 - [x] Gate 2 is formally accepted, committed, and reverified
@@ -114,8 +130,8 @@ number, title, version, document status, source filename, rank, and similarity s
 - [x] Named retrieval smoke questions are documented and exercised
 - [x] The complete deterministic test suite and Ruff pass
 - [x] Installed dependencies are healthy and editable-package imports succeed
-- [ ] The real-provider smoke test remains unrun because all four live settings are absent
+- [x] The real-provider smoke test passes with all four live settings configured
 - [x] No secrets or out-of-scope technologies are present
 - [x] Documentation describes actual implemented behavior and Gate 4 has not started
 
-Gate 3 is **IN PROGRESS** and must not be marked accepted without explicit owner acceptance.
+Gate 3 is **ACCEPTED**. Gate 4 has not started.
