@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for Gate 5 implementation and implemented locally on 2026-09-12. Formal Gate 5 acceptance
-remains pending owner review and a separately authorized live baseline.
+Accepted for Gate 5 implementation and implemented locally on 2026-09-12. Gate 5 was formally
+accepted on 2026-09-13 after deterministic verification and the directly authorized read-only live
+baseline passed.
 
 ## Context
 
@@ -72,3 +73,9 @@ The dataset is small, synthetic, and manually authored. Document relevance and p
 can still be incomplete, semantic answer correctness still requires human review, and live rankings
 or prose can change behind provider model aliases. The baseline therefore supports learning and
 regression detection; it does not demonstrate production accuracy, fairness, or safety.
+
+The accepted live baseline makes those limitations measurable: Document Hit@1 was 14/17, Hit@3
+was 16/17, page evidence was 25/26, and citation-document precision and recall were both 23/25.
+Perfect Hit@5 and Hit@10, multi-document recall, answer-status accuracy, chunk-citation validity,
+unsupported abstention, and historical status handling do not remove the need for human semantic
+review or justify tuning within Gate 5.

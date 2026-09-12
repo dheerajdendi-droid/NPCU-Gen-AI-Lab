@@ -1,13 +1,12 @@
 # Architecture
 
-This document describes the intended architecture, the capabilities accepted through Gate 4, and
-the Gate 5 evaluation capability implemented pending owner review and live verification.
+This document describes the intended architecture and the capabilities accepted through Gate 5.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
 after live OpenAI and Pinecone verification. Gate 4 grounded generation is accepted after offline
-verification, a focused six-scenario live test, and owner review. Gate 5 adds a local evaluation
-boundary without changing retrieval or generation. Later capabilities remain plans; Gate 6 has not
-started.
+verification, a focused six-scenario live test, and owner review. Gate 5 adds an accepted local
+evaluation boundary without changing retrieval or generation. Later capabilities remain plans;
+Gate 6 has not started.
 
 ## Capability boundaries
 

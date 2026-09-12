@@ -69,14 +69,15 @@ tests. Explicit live collection selected both tests without executing them. Ruff
 editable-import, whitespace, credential, and scope checks passed. The owner formally accepted Gate 4
 on **2026-09-12**. Gate 5 has not started.
 
-## Gate 5 — IMPLEMENTED, PENDING OWNER REVIEW AND LIVE BASELINE
+## Gate 5 — ACCEPTED
 
 Started on **2026-09-12** from clean, synchronized commit `0126705`. The accepted Gate 4 baseline
-was reproduced with 169 deterministic tests passing and both live tests skipped. Gate 5 will add a
-local provider-independent evaluation harness, twenty protected synthetic cases, separate retrieval
-and answer measures, explicit zero denominators, deterministic reports and fingerprints, distinct
-human review, and an authorization-gated read-only live test. Retrieval and generation tuning are
-excluded while the baseline is established. Gate 5 is not accepted, and Gate 6 has not started.
+was reproduced with 169 deterministic tests passing and both live tests skipped. Gate 5 set out to
+add a local provider-independent evaluation harness, twenty protected synthetic cases, separate
+retrieval and answer measures, explicit zero denominators, deterministic reports and fingerprints,
+distinct human review, and an authorization-gated read-only live test. Retrieval and generation
+tuning were excluded while the baseline was established. At that point Gate 5 was not accepted,
+and Gate 6 had not started.
 
 Implementation completed locally on **2026-09-12** with 20 human-traced synthetic cases: 12
 current-policy cases covering every current document, three multi-document cases, three unsupported
@@ -87,5 +88,18 @@ keeps 0–2 human ratings separate from automated results.
 
 The complete deterministic suite passes 202 tests and skips all three live tests by default. The
 Gate 5 live evaluator is collected only with `--run-live`, records one retrieval per case, and
-cannot create, upsert, update or delete Pinecone data. It has not been executed. Gate 5 remains
-pending owner review and separately authorized live evaluation; Gate 6 has not started.
+cannot create, upsert, update or delete Pinecone data.
+
+After direct authorization, the live baseline passed on **2026-09-13** against the existing
+194-vector Pinecone namespace. All 20 cases completed without provider failures or structural
+grounding violations. Document Hit@1, Hit@3, Hit@5 and Hit@10 were respectively 14/17, 16/17,
+17/17 and 17/17; multi-document recall was 25/25; and page evidence was 25/26. Answer status was
+correct for 20/20 cases, all 42 citations referenced supplied chunks, citation-document precision
+and recall were both 23/25, all three unsupported cases abstained citation-free, and both historical
+cases handled current and superseded status correctly. The run made 20 query-embedding calls, 20
+read-only Pinecone searches and 20 stateless generation calls; it performed no remote mutation.
+
+The owner formally accepted Gate 5 on **2026-09-13**. Acceptance retains the observed misses and
+the limits of a small synthetic dataset, structural automated scoring, pending human review,
+provider variability, page-bounded word-window retrieval, and the absence of reranking, hybrid
+search or threshold calibration. Gate 6 has not started.

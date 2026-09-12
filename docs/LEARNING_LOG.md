@@ -188,3 +188,15 @@ record concrete findings without inventing personal reflections.
   prose is fully correct or complete. The separate 0–2 human template preserves that responsibility.
 - A read-only Pinecone wrapper that exposes describe and query but no create or upsert operation
   makes the live evaluation mutation boundary executable rather than merely documentary.
+- The authorized 20-case live baseline completed without provider failures or structural grounding
+  violations while leaving the existing 194-vector namespace unchanged by design.
+- Perfect Hit@5 and Hit@10 can coexist with lower Hit@1 and Hit@3. The observed 14/17 Hit@1 and
+  16/17 Hit@3 results make ranking quality visible instead of reducing retrieval to a binary pass.
+- Page-evidence hits of 25/26 and citation-document precision and recall of 23/25 show that valid
+  chunk citations alone do not prove complete use of the expected documents and pages.
+- All three unsupported cases abstained without citations, and both historical cases labelled the
+  superseded Lending version correctly; these focused checks demonstrate the intended behavior only
+  for the small synthetic dataset.
+- Passing automated measures does not complete the human-review rubric. Semantic correctness,
+  completeness, relevance, evidence use, clarity, and version handling still require human ratings,
+  while live rankings and prose remain provider-variable.

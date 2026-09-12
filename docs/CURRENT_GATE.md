@@ -2,7 +2,7 @@
 
 Gate 5 started on **2026-09-12** from the formally accepted Gate 4 baseline at commit `0126705`.
 Gate 5 evaluates the accepted retrieval and grounded-generation behavior without tuning it. It is
-not formally accepted, and Gate 6 has not started.
+formally accepted on **2026-09-13**, and Gate 6 has not started.
 
 ## Objective
 
@@ -104,11 +104,11 @@ It loads the accepted provider settings normally, confirms the existing Pinecone
 194-vector namespace, and exposes no credential values. The index control is read-only: it may
 describe and query the existing index but cannot create, upsert, update, or delete anything.
 
-The final 20-case live baseline is expected to make approximately 20 OpenAI query-embedding calls,
-20 Pinecone searches, and up to 20 stateless `gpt-5.6-terra` generation calls. It records each
-case's evidence once and reuses that exact evidence for retrieval and answer scoring. It must not
-run until the owner directly authorizes the questions, synthetic evidence disclosure, provider
-calls, cost, and read-only remote effects. The future command will be:
+The final 20-case live baseline made 20 OpenAI query-embedding calls, 20 Pinecone searches, and 20
+stateless `gpt-5.6-terra` generation calls after the owner directly authorized the questions,
+synthetic evidence disclosure, provider calls, cost, and read-only remote effects. It recorded each
+case's evidence once and reused that exact evidence for retrieval and answer scoring. The command
+was:
 
 ```text
 python -m pytest --run-live tests/integration/test_live_evaluation.py -vv -s
@@ -149,7 +149,10 @@ python -m pytest --run-live tests/integration/test_live_evaluation.py -vv -s
 - [x] Comprehensive deterministic unit and integration tests pass
 - [x] Ruff, dependency, imports, whitespace, credential, and scope checks pass
 - [x] One local implementation commit contains only Gate 5 work
-- [x] Gate 5 remains pending owner review and Gate 6 has not started
+- [x] The directly authorized read-only live baseline passes without provider failures or remote
+  mutation
+- [x] The owner formally accepts Gate 5, with measured limitations retained
+- [x] Gate 6 has not started
 
 ## Implementation evidence
 
@@ -166,5 +169,30 @@ executing them. The dataset, corpus and public-configuration fingerprints are re
 - `a744c7cb9f3d8ab377a06a15bab6512315513df1a16d7575212230a849fe0006`
 - `41a7741c895c61666d40ffb7ebec136f0c03e07683aba96837d3ea9b1064b577`
 
-Gate 5 is **implemented pending owner review and a separately authorized live baseline**. It is not
-formally accepted, and Gate 6 has not started.
+The directly authorized live baseline passed one focused live test in 66.61 seconds. It confirmed
+the existing Pinecone namespace contained 194 vectors, then completed all 20 cases with no provider
+failures or structural grounding violations and without creating, updating, upserting, or deleting
+remote data. Automated results were:
+
+- Document Hit@1: 14/17 (0.8235)
+- Document Hit@3: 16/17 (0.9412)
+- Document Hit@5 and Hit@10: 17/17 (1.0000)
+- Mean reciprocal rank: 15.0833/17 (0.8873)
+- Multi-document recall: 25/25 (1.0000)
+- Page-evidence hit rate: 25/26 (0.9615)
+- Expected answer-status accuracy: 20/20 (1.0000)
+- Citation chunk validity: 42/42 (1.0000)
+- Citation-document precision and recall: 23/25 (0.9200)
+- Unsupported citation-free behavior: 3/3 (1.0000)
+- Historical status labelling and version/status correctness: 2/2 (1.0000)
+
+These results are a baseline, not a claim of perfect quality. Three relevant documents did not rank
+first, one did not appear in the top three, one expected page pair was absent at depth ten, and two
+expected citation documents were not cited. The 20 cases and 11 documents are synthetic and small;
+automated checks validate declared structure and provenance but not full semantic correctness or
+completeness. Human 0–2 review remains pending, and provider rankings, latency, and prose may vary
+between live runs. The accepted word-window retrieval has no reranking, hybrid retrieval, or
+calibrated similarity threshold, and no tuning was performed in Gate 5.
+
+The owner formally accepted Gate 5 on **2026-09-13** based on the deterministic verification and
+authorized live baseline. Gate 6 has not started.

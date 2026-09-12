@@ -1,11 +1,11 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 5 — Retrieval and Grounded Answer Evaluation — implemented pending owner
-  review and a separately authorized live baseline
-- **Current implementation:** Capabilities accepted through Gate 4 plus a provider-independent local
-  evaluation harness, protected synthetic cases, deterministic metrics, human-review templates,
-  reports, and fingerprints
+- **Current gate:** Gate 5 — Retrieval and Grounded Answer Evaluation — formally accepted on
+  2026-09-13; Gate 6 has not started
+- **Current implementation:** Capabilities accepted through Gate 5, including a provider-independent
+  local evaluation harness, protected synthetic cases, deterministic retrieval and grounded-answer
+  metrics, human-review templates, reports, and fingerprints
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small`, Pinecone Serverless, and
   a live-verified OpenAI `gpt-5.6-terra` Responses adapter
 
@@ -16,10 +16,10 @@ embedding and vector-index boundaries, idempotent indexing, metadata-filtered re
 provider-independent results are implemented. The live OpenAI/Pinecone path passed and Gate 3 was
 formally accepted on 2026-09-12.
 
-Current deterministic evidence: 169 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with the
-two live tests skipped by default even when credentials are configured. Ruff, installed-dependency
-health, editable-package imports, whitespace, credential, and scope checks pass. Live tests now
-require the explicit `--run-live` option.
+Current deterministic evidence: 202 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with all
+three live tests skipped by default even when credentials are configured. Ruff,
+installed-dependency health, editable-package imports, whitespace, credential, and scope checks
+pass. Live tests require the explicit `--run-live` option.
 
 Gate 4 started on 2026-09-12. Its deterministic implementation passes 169 non-live tests, including
 one complete offline grounded-answer integration test. The approved OpenAI generation path uses
@@ -39,11 +39,20 @@ and grounded-answer measures, deterministic reports and fingerprints, distinct h
 one explicitly authorized read-only live baseline. No retrieval or generation tuning, hosted eval
 service, LLM judge, framework, or new dependency is planned. Gate 6 has not started.
 
-Gate 5 implementation now contains 20 validated cases with the required 12 current, three
-multi-document, three unsupported/adversarial and two historical split. The complete deterministic
-suite passes 202 tests and skips three live tests by default. The read-only Gate 5 live test is
-implemented but has not run; it requires direct authorization and `--run-live`. Gate 5 is not
-formally accepted, and Gate 6 has not started.
+Gate 5 contains 20 validated cases with the required 12 current, three multi-document, three
+unsupported/adversarial and two historical split. After direct authorization, the read-only live
+baseline passed all 20 cases against the existing 194-vector namespace without remote mutation.
+Document Hit@1 was 14/17, Hit@3 was 16/17, Hit@5 and Hit@10 were 17/17,
+multi-document recall was 25/25, and page-evidence hits were 25/26. Answer status was correct for
+20/20 cases, all 42 citations referenced supplied chunks, citation-document precision and recall
+were both 23/25, all three unsupported cases abstained without citations, and both historical cases
+handled version status correctly. There were no provider failures or structural grounding
+violations.
+
+The owner formally accepted Gate 5 on 2026-09-13. The baseline is deliberately small and synthetic;
+its automated measures do not establish semantic correctness, completeness, production accuracy,
+fairness, or safety. Human ratings remain pending, and live provider rankings and prose may change.
+Gate 6 has not started.
 
 ## Planned future capability areas
 
