@@ -1,8 +1,8 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 5 — Retrieval and Grounded Answer Evaluation — formally accepted on
-  2026-09-13; Gate 6 has not started
+- **Current gate:** Gate 6 — Structured Management Analytics — design checkpoint pending owner
+  approval
 - **Current implementation:** Capabilities accepted through Gate 5, including a provider-independent
   local evaluation harness, protected synthetic cases, deterministic retrieval and grounded-answer
   metrics, human-review templates, reports, and fingerprints
@@ -52,7 +52,14 @@ violations.
 The owner formally accepted Gate 5 on 2026-09-13. The baseline is deliberately small and synthetic;
 its automated measures do not establish semantic correctness, completeness, production accuracy,
 fairness, or safety. Human ratings remain pending, and live provider rankings and prose may change.
-Gate 6 has not started.
+
+Gate 6 entered its documentation-only design checkpoint on 2026-09-13 from clean, synchronized
+commit `1070ab5`. The proposal defines one synthetic Excel workbook, strict sheet and field
+contracts, deterministic metric definitions, an internally reconciled July/August scenario,
+double-counting controls, application-owned results, DuckDB as derived state, and openpyxl as the
+minimal Excel reader. No dependency has been installed, no workbook or database has been created,
+and no analytics code has been implemented. Owner approval is required before implementation.
+Gate 7 has not started.
 
 ## Planned future capability areas
 

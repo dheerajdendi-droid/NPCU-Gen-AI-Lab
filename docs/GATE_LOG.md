@@ -103,3 +103,16 @@ The owner formally accepted Gate 5 on **2026-09-13**. Acceptance retains the obs
 the limits of a small synthetic dataset, structural automated scoring, pending human review,
 provider variability, page-bounded word-window retrieval, and the absence of reranking, hybrid
 search or threshold calibration. Gate 6 has not started.
+
+## Gate 6 — DESIGN CHECKPOINT
+
+Started on **2026-09-13** after confirming Gate 5 was documented, committed, clean, and synchronized
+at `1070ab5`. The accepted baseline was reproduced with 202 deterministic tests passing, all three
+live tests skipped, and Ruff passing.
+
+The proposed contract defines a synthetic Excel workbook, exact sheets and relational rules,
+centralized deterministic metrics, a hand-reconciled July/August arrears scenario, pre-aggregation
+rules that prevent fact multiplication, provider-independent analytical results, openpyxl workbook
+validation, and derived DuckDB state. ADR 0007 is proposed. No dependency, workbook, database, or
+analytics implementation has been added. Work is paused for owner approval, and Gate 7 has not
+started.

@@ -1,12 +1,14 @@
 # Architecture
 
-This document describes the intended architecture and the capabilities accepted through Gate 5.
+This document describes the intended architecture, the capabilities accepted through Gate 5, and
+the proposed Gate 6 structured-analytics boundary.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
 after live OpenAI and Pinecone verification. Gate 4 grounded generation is accepted after offline
 verification, a focused six-scenario live test, and owner review. Gate 5 adds an accepted local
 evaluation boundary without changing retrieval or generation. Later capabilities remain plans;
-Gate 6 has not started.
+Gate 6 is paused at its documentation-only design checkpoint; no analytics dependency, data, or
+implementation has been added.
 
 ## Capability boundaries
 
@@ -131,3 +133,23 @@ behavior, while application validation constrains every accepted statement to re
 Evaluation questions and reference facts are not corpus documents. They are never parsed, chunked,
 indexed or supplied as answer evidence. Gate 5 establishes a small synthetic baseline and does not
 claim production accuracy or tune the accepted system.
+
+## Proposed Gate 6 workbook-to-analysis flow
+
+1. One canonical synthetic XLSX workbook declares its own data dictionary and contains separate
+   loan, snapshot, payment, payroll, credit-control, complaint, and incident grains.
+2. An openpyxl adapter inspects exact sheets, headers, and cell values read-only and maps no library
+   objects beyond the workbook boundary.
+3. Application-owned models validate types, keys, foreign keys, enumerations, dates, row-level
+   synthetic markers, and cross-field rules before database work begins.
+4. One DuckDB adapter transaction rebuilds typed derived tables from the validated aggregate.
+5. Row counts, ID sets, and additive totals reconcile between workbook records and DuckDB.
+6. Centralized, parameterized SQL calculates balances, counts, PAR30, early arrears, payment and
+   contact outcomes, complaints, incidents, and approved segment contributions.
+7. Application-owned result models retain periods, numerators, denominators, values, dimensions,
+   supporting counts, calculation identity, and limitations.
+8. A deterministic template reports facts and associations while refusing unsupported causal
+   language.
+
+This flow is proposed in ADR 0007 and requires owner approval before implementation. It is separate
+from policy retrieval and grounded generation; OpenAI and Pinecone have no Gate 6 role.

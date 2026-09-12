@@ -7,8 +7,9 @@ educational RAG project and an exercise in designing an enterprise GenAI archite
 Development proceeds through explicit gates so that each layer is understood, tested, and
 documented before the next is introduced. **Gates 0–5 are accepted.** Gate 5's protected 20-case
 evaluation passed deterministic verification and a directly authorized read-only live baseline
-before owner acceptance on 2026-09-13. Gate 6 has not started. Future capabilities described in the
-architecture are plans, not current features.
+before owner acceptance on 2026-09-13. Gate 6 is at a documentation-only design checkpoint awaiting
+owner approval; no analytics dependency, workbook, database, or implementation has been added.
+Future capabilities described in the architecture are plans, not current features.
 
 ## Delivery outlook
 

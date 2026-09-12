@@ -200,3 +200,22 @@ record concrete findings without inventing personal reflections.
 - Passing automated measures does not complete the human-review rubric. Semantic correctness,
   completeness, relevance, evidence use, clarity, and version handling still require human ratings,
   while live rankings and prose remain provider-variable.
+
+## Gate 6 learning objectives
+
+- Understand why exact management metrics belong in structured analytics rather than retrieval or
+  generation
+- Understand workbook validation as a boundary between weakly typed Excel cells and typed records
+- Understand table grain, primary keys, foreign keys, and pre-aggregation as controls against
+  double-counting
+- Understand additive measures, ratios, explicit denominators, and zero-denominator semantics
+- Understand PAR30 as an at-risk outstanding-balance ratio rather than an arrears-balance ratio
+- Understand deterministic parameterized SQL and stable calculation identities
+- Understand workbook-to-database reconciliation and rebuildable derived state
+- Understand the difference between measured facts, associations, possible contributing factors,
+  and causal claims
+- Understand why a hand-reconciled synthetic scenario is useful but cannot establish production
+  accuracy or causality
+
+These are proposed Gate 6 learning objectives and do not claim mastery. Implementation observations
+will be added only after the design checkpoint is approved and evidence exists.
