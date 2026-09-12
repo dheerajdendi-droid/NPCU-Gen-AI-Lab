@@ -1,13 +1,15 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 1 — Document Ingestion and Parsing
-- **Current implementation:** Gate 0 foundation complete; minimal page-aware PDF ingestion in
-  progress
+- **Current gate:** Gate 2 — Accepted; awaiting Gate 3 initiation
+- **Current implementation:** Foundation, page-aware PDF ingestion, and deterministic page-bounded
+  chunking complete
 - **Implemented external AI technologies:** None
 
-Gate 0 was formally accepted on 2026-09-10. Gate 1 is limited to extracting page-aware text from
-synthetic, born-digital PDFs; planned RAG and other AI capabilities remain unimplemented.
+Gate 0 and Gate 1 were formally accepted on 2026-09-10. Gate 2 was formally accepted on
+2026-09-12. The project is awaiting explicit Gate 3 initiation; no Gate 3 contract or functionality
+has been created. Embeddings, vector storage, retrieval, RAG, and other planned AI capabilities
+remain unimplemented.
 
 ## Planned future capability areas
 

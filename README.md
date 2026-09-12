@@ -5,9 +5,10 @@ union. All credit-union data used by the project will be synthetic. The reposito
 educational RAG project and an exercise in designing an enterprise GenAI architecture.
 
 Development proceeds through explicit gates so that each layer is understood, tested, and
-documented before the next is introduced. **Gate 0 — Foundation is accepted, and Gate 1 —
-Document Ingestion and Parsing is implemented pending formal acceptance.** Future capabilities
-described in the architecture are plans, not current features.
+documented before the next is introduced. **Gate 0 — Foundation, Gate 1 — Document Ingestion and
+Parsing, and Gate 2 — Deterministic Page-Aware Chunking are accepted.** The project is awaiting
+explicit Gate 3 initiation. Future capabilities described in the architecture are plans, not
+current features.
 
 ## Delivery outlook
 
@@ -27,8 +28,15 @@ Gate 0 provides a Python 3.12 `src`-layout package, provider-independent domain 
 environment-settings foundation, tests, lint configuration, and architecture and planning
 documentation. Gate 1 adds page-aware text extraction for synthetic, born-digital PDFs using
 `pypdf`. It preserves one-based page provenance and empty pages behind the ingestion boundary.
+Gate 2 adds deterministic word-window chunking that keeps every chunk on one source page, uses
+configurable maximum word counts and overlap, and assigns stable document-wide indexes and IDs.
 
-The project does not yet perform OCR, chunking, retrieval, model calls, or RAG.
+The version-controlled synthetic corpus baseline contains 11 PDFs, a manifest, explanatory
+documentation, and matching editable Markdown sources. The PDFs are the future canonical
+retrieval input; source Markdown must not be indexed alongside them.
+
+The project does not yet perform OCR, model-specific tokenization, embeddings, vector storage,
+retrieval, model calls, or RAG. Gate 3 has not started.
 
 ## Local setup
 

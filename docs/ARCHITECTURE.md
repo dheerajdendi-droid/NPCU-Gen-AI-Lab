@@ -1,13 +1,15 @@
 # Architecture
 
-This document describes the intended architecture. The foundation, domain models, and minimal
-page-aware PDF parsing are implemented through Gate 1. All other capabilities below remain plans.
+This document describes the intended architecture. The foundation, page-aware PDF parsing, and
+deterministic page-bounded chunk construction are complete and accepted through Gate 2. The
+project is awaiting Gate 3 initiation; all later capabilities remain plans.
 
 ## Capability boundaries
 
 1. **Ingestion** accepts source material and produces clean, traceable document representations.
-   Gate 1 implements born-digital PDF text extraction as one validated result per source page;
-   cleaning, OCR, and chunking remain deferred.
+   Gate 1 implements born-digital PDF text extraction as one validated result per source page.
+   Gate 2 transforms those pages into deterministic word-window chunks without crossing page
+   boundaries. Cleaning, OCR, layout reconstruction, and table extraction remain deferred.
 2. **Retrieval** finds relevant document evidence through independently replaceable strategies.
 3. **Analytics** answers structured-data questions through deterministic queries and calculations.
 4. **Graph** represents and traverses relationships that are awkward to express as document
@@ -43,3 +45,6 @@ but it should not blur their responsibilities.
 The core MVP—document RAG, structured analytics, citations, evaluation, and a usable
 interface—should be completed and stabilised before optional extensions such as graph retrieval,
 memory, voice, and provider-comparison experiments are added.
+
+Gate 2's “indexing” is limited to deterministic application-level `chunk_index` values. It does
+not create a vector, search, or provider index.

@@ -39,3 +39,11 @@ implementation.
 **Reason:** `pypdf` is a focused, pure-Python dependency that can extract text from digitally
 generated PDFs without introducing an orchestration framework or provider-specific domain types.
 OCR and parser interchangeability are deliberately deferred.
+
+## DEC-009 — Use deterministic, page-bounded word-window chunking in Gate 2
+
+**Reason:** Word windows expose chunk sizing and overlap mechanics without coupling the domain to
+a model tokenizer. Chunks use required one-based `page_number` provenance, zero-based
+document-wide indexes, and IDs derived from the URL-encoded document ID, page, and index. Pages
+must be strictly ordered but may be non-contiguous so validated subsets remain usable. See ADR
+0003 for the full behavior and trade-offs.

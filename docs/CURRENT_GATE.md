@@ -1,72 +1,108 @@
-# Current gate: Gate 1 — Document Ingestion and Parsing
+# Gate 2 — Deterministic Page-Aware Chunking — ACCEPTED
+
+Gate 2 was formally accepted by the project owner on **2026-09-12** after every exit criterion was
+reverified. The project is awaiting explicit Gate 3 initiation. This document retains the accepted
+Gate 2 contract and evidence; it does not define Gate 3.
 
 ## Objective
 
-Implement the smallest complete, provider-independent path for extracting page-aware text from
-synthetic, digitally generated PDF documents.
+Implement a small, provider-independent, deterministic transformation from validated
+`DocumentPage` values into validated `Chunk` values while preserving source-document and
+one-based source-page provenance.
 
 ## In scope
 
-- Select and document one minimal PDF parsing dependency (`pypdf`).
-- Add a provider-independent page-level representation.
-- Preserve one-based source page numbers.
-- Keep PDF-library types behind the ingestion boundary.
-- Parse a synthetic, born-digital PDF fixture.
-- Return validated text associated with every source page.
-- Define and test empty-page, invalid-PDF, missing-file, and encrypted-PDF behavior.
-- Add unit tests for mapping and validation and an integration test using a real PDF.
-- Record the parsing and page-provenance decision in an ADR.
+- One understandable word-window chunking strategy
+- Positive `max_words` and non-negative `overlap_words` configuration
+- Page-bounded chunks produced in source order
+- Explicit whitespace and line-ending normalization
+- Deterministic chunk text, ordering, indexes, and identifiers
+- Empty-page handling and page-sequence validation
+- Focused unit tests and a PDF-to-pages-to-chunks integration test
+- Documentation of decisions, behavior, limitations, and learning observations
 
 ## Out of scope
 
-- Chunking
-- Embeddings
-- Vector databases
-- Retrieval and reranking
-- LLM calls
-- RAG
-- OCR and scanned-document support
-- Citations beyond preserving source-page provenance
-- APIs and user interfaces
+- Embeddings and model-specific tokenization
+- Vector databases, indexes, similarity search, retrieval, and reranking
+- LLM calls, prompts, generation, RAG, and citations beyond provenance fields
+- OCR, layout reconstruction, and table extraction
+- Semantic or agentic chunking and multiple chunking strategies
 - LangChain and LlamaIndex
-- Multiple interchangeable parser implementations
-- Structured analytics, graphs, agents, memory, voice, and deployment
+- APIs, command-line tools, and user interfaces
+- Analytics, graphs, agents, memory, voice, and deployment
+- Gate 3 functionality and placeholder dependencies for future gates
 
-## Model decision
+## Model and provenance decision
 
-`DocumentPage` is the application-level result for one PDF page. It contains a nonblank
-`document_id`, a one-based positive `page_number`, and extracted `text`. Empty source pages are
-represented with an empty string so page positions are never discarded. The model exposes no
-`pypdf` types.
+`Chunk.page` is renamed to required `Chunk.page_number` so `DocumentPage` and `Chunk` use the same
+one-based terminology. A chunk cannot span pages. `chunk_index` is a zero-based, document-wide
+sequence over emitted chunks, so empty pages do not create gaps and chunks remain unambiguously
+ordered across the input document.
+
+The pre-existing optional `section` and `metadata` fields remain part of the domain contract, but
+Gate 2 does not infer or populate them because word windows do not provide reliable section or
+metadata semantics.
+
+Chunk IDs have the form:
+
+```text
+<URL-encoded-document-id>:p<four-digit-page-number>:c<six-digit-document-index>
+```
+
+For example, `policy-001:p0002:c000003`. IDs are derived only from validated provenance and
+ordering; no random values are used.
+
+## Chunk-size, overlap, and normalization behavior
+
+- Text is split with Python's `str.split()`, which trims leading and trailing whitespace and
+  treats runs of spaces, tabs, and line endings as a single separator.
+- Chunk text is rebuilt with one ASCII space between words.
+- Case, punctuation, and word content are otherwise preserved.
+- Every chunk contains at most `max_words` words.
+- The next window advances by `max_words - overlap_words`.
+- Adjacent chunks from the same page share exactly `overlap_words` words when another window is
+  required and enough words exist.
+- Overlap never crosses a page boundary.
+- Empty and whitespace-only pages produce no chunks and do not change later page numbers.
+
+## Input and error behavior
+
+- No pages returns an empty list after configuration validation.
+- One page and ordered page subsets are accepted.
+- Page numbers must be strictly increasing, but need not begin at 1 or be contiguous. This lets
+  callers chunk a valid subset without inventing missing content.
+- All pages in one call must have the same `document_id`.
+- Duplicate or out-of-order page numbers raise `ValueError`.
+- Mixed document IDs raise `ValueError`.
+- `max_words` must be an integer greater than zero.
+- `overlap_words` must be an integer greater than or equal to zero and strictly smaller than
+  `max_words`; invalid configuration raises `ValueError` before page iteration.
+- Inputs that are not `DocumentPage` instances raise `TypeError`.
+- Invalid `DocumentPage` and `Chunk` construction fails Pydantic domain validation.
 
 ## Expected output
 
-Parsing returns a list of validated `DocumentPage` values in source order, including empty pages.
-Each result retains the caller-supplied document identifier and its original one-based page
-number. Text is extracted only from born-digital PDF content.
-
-## Error behavior
-
-- A missing or non-file path raises `FileNotFoundError`.
-- A malformed or unreadable PDF raises the ingestion-level `InvalidPdfError`.
-- Any encrypted PDF raises the ingestion-level `EncryptedPdfError`; password handling is not in
-  scope.
-- A page with no extractable text produces a `DocumentPage` whose `text` is `""`.
-- Invalid page mappings fail Pydantic domain validation.
+The chunker returns validated `Chunk` values in deterministic document order. Consumers see only
+application-domain types and need not know whether pages originated from `pypdf` or another
+earlier ingestion step.
 
 ## Exit criteria
 
-- [x] Gate 0 closure tests continue to pass without the pytest `pythonpath` shortcut
-- [x] `DocumentPage` validation and page mapping are unit tested
-- [x] A real synthetic, born-digital PDF is parsed in an integration test
-- [x] One-based page provenance is preserved, including empty pages
-- [x] Missing, invalid, and encrypted PDFs have tested error behavior
-- [x] Package imports succeed against the editable installation
-- [x] The complete test suite passes
+- [x] Gate 1 is formally recorded as accepted with its verification evidence retained
+- [x] Valid pages produce validated chunks deterministically
+- [x] Deterministic IDs and zero-based document-wide indexes are tested
+- [x] Every chunk retains its document ID and one-based page provenance
+- [x] Chunks are page-bounded and maximum word size and overlap are enforced
+- [x] Empty and whitespace-only page behavior is documented and tested
+- [x] Invalid configuration, mixed documents, and invalid page sequences fail clearly
+- [x] Unit tests cover chunking boundaries and domain validation
+- [x] An integration test covers synthetic PDF parsing followed by chunking
+- [x] The complete test suite passes without unexpected warnings
 - [x] Ruff passes
+- [x] Editable-package imports succeed without a pytest path shortcut
 - [x] Installed dependencies have no broken requirements
-- [x] No post-Gate-1 technology has been introduced
-- [x] Architecture and learning documentation reflect the implemented behavior
+- [x] Documentation and the Gate 2 ADR describe actual behavior
+- [x] No secrets, Gate 3 implementation, or future provider SDKs are present
 
-Gate 1 must not be formally accepted until every criterion above has been demonstrated. Gate 2
-must not start as part of this work.
+Gate 2 is **ACCEPTED**. Gate 3 has not started.

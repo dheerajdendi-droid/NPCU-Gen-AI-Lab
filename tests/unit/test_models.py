@@ -30,7 +30,7 @@ def make_chunk(**overrides: object) -> Chunk:
         "text": "Synthetic policy content.",
         "chunk_index": 0,
         "section": "Purpose",
-        "page": 1,
+        "page_number": 1,
     }
     values.update(overrides)
     return Chunk.model_validate(values)
@@ -78,14 +78,24 @@ def test_chunk_index_cannot_be_negative() -> None:
         make_chunk(chunk_index=-1)
 
 
-@pytest.mark.parametrize("page", [0, -1])
-def test_page_must_be_positive_when_provided(page: int) -> None:
+@pytest.mark.parametrize("page_number", [0, -1])
+def test_chunk_page_number_must_be_one_based(page_number: int) -> None:
     with pytest.raises(ValidationError):
-        make_chunk(page=page)
+        make_chunk(page_number=page_number)
 
 
-def test_page_can_be_omitted() -> None:
-    assert make_chunk(page=None).page is None
+def test_chunk_page_number_is_required() -> None:
+    values = make_chunk().model_dump()
+    del values["page_number"]
+
+    with pytest.raises(ValidationError):
+        Chunk.model_validate(values)
+
+
+@pytest.mark.parametrize("text", ["", "   ", "\r\n\t"])
+def test_chunk_text_cannot_be_blank(text: str) -> None:
+    with pytest.raises(ValidationError):
+        make_chunk(text=text)
 
 
 def test_document_metadata_is_retained() -> None:

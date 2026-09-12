@@ -41,8 +41,8 @@ class Chunk(DomainModel):
 
     chunk_id: NonBlankString
     document_id: NonBlankString
-    text: str
+    text: NonBlankString
     chunk_index: int = Field(ge=0)
     section: str | None = None
-    page: int | None = Field(default=None, ge=1)
+    page_number: int = Field(ge=1)
     metadata: dict[str, Any] = Field(default_factory=dict)
