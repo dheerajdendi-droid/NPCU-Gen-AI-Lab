@@ -1,4 +1,4 @@
-"""Application-level errors raised by PDF ingestion."""
+"""Application-level errors raised by ingestion."""
 
 
 class PdfIngestionError(Exception):
@@ -12,3 +12,6 @@ class InvalidPdfError(PdfIngestionError):
 class EncryptedPdfError(PdfIngestionError):
     """Raised when a PDF is encrypted and therefore outside Gate 1 scope."""
 
+
+class ManifestValidationError(ValueError):
+    """Raised when canonical corpus metadata and PDFs are inconsistent."""

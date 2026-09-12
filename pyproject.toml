@@ -9,6 +9,8 @@ description = "Provider-independent foundation for the NPCU GenAI Intelligence L
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+  "openai>=3.8,<4",
+  "pinecone>=10,<11",
   "pydantic>=2.9,<3",
   "pydantic-settings>=2.5,<3",
   "pypdf>=5,<7",
@@ -26,6 +28,9 @@ packages = ["src/cu_intelligence"]
 [tool.pytest.ini_options]
 addopts = "-ra"
 testpaths = ["tests"]
+markers = [
+  "live: makes explicitly opted-in calls to real external providers",
+]
 
 [tool.ruff]
 target-version = "py312"

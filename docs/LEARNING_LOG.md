@@ -62,3 +62,39 @@ factual implementation findings without inventing personal reflections.
 - IDs derived from URL-encoded document identity, page number, and document-wide index are stable
   for identical input and configuration. Changing input order or chunk configuration can change
   later indexes and IDs.
+
+## Gate 3 learning objectives
+
+- Understand the difference between an embedding provider and a vector-index provider
+- Understand how fixed vector dimensions must agree across model, application, and index
+- Understand how manifest metadata becomes validated retrieval provenance
+- Understand idempotent upsert and why a vector index is derived rather than canonical state
+- Understand metadata filtering for current and superseded policy versions
+- Understand why provider SDK models should remain inside adapters
+- Understand deterministic test doubles versus explicitly opted-in live smoke tests
+- Understand credential, cost, regional, and data-handling implications of managed retrieval
+
+These are learning objectives and do not claim personal mastery. The observations below record
+factual implementation findings without inventing personal reflections.
+
+## Gate 3 implementation observations
+
+- Deriving document IDs from unique PDF filename stems preserves a stable link between the manifest,
+  parsed pages, deterministic chunks, vector records, and retrieval results.
+- Strict set comparison between manifest filenames and corpus PDFs detects both missing and unlisted
+  documents before any paid embedding request can occur.
+- Effective dates need an explicit English-month parser to avoid locale-dependent manifest
+  behavior; provider metadata uses ISO date strings.
+- Separate CorpusDocument and CorpusChunk models retain metadata and page provenance without
+  flattening PDFs into the foundation Document.text field.
+- Passing explicit dimensions=1536 to the embedding request and validating every returned vector
+  makes model/index mismatch visible at the application boundary.
+- Reusing Gate 2 chunk IDs as vector IDs makes repeated upsert idempotent for identical input, but
+  does not remove records that disappear from a later corpus build.
+- A CURRENT metadata filter is simpler and safer than retrieving both versions and discarding
+  superseded matches after ranking.
+- Deterministic keyword embeddings and an in-memory cosine index can validate mapping, filtering,
+  ranking, and provenance without claiming to reproduce real model quality.
+- OpenAI and Pinecone settings were absent during completion, so no live requests or index creation
+  occurred; the explicit smoke test remains pending configured credentials, index name, and
+  namespace.

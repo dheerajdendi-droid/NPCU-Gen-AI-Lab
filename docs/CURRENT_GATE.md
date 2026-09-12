@@ -1,108 +1,121 @@
-# Gate 2 — Deterministic Page-Aware Chunking — ACCEPTED
+# Gate 3 — Metadata-Aware Embeddings and Semantic Retrieval — IN PROGRESS
 
-Gate 2 was formally accepted by the project owner on **2026-09-12** after every exit criterion was
-reverified. The project is awaiting explicit Gate 3 initiation. This document retains the accepted
-Gate 2 contract and evidence; it does not define Gate 3.
+Gate 3 started on **2026-09-12** after the accepted Gate 2 baseline was reverified. The project
+owner approved OpenAI `text-embedding-3-small` with explicit 1,536-dimensional output and a
+Pinecone Serverless dense index using cosine similarity in AWS `us-east-1` for the synthetic-only
+corpus. Gate 3 must remain pending formal owner acceptance after implementation.
 
 ## Objective
 
-Implement a small, provider-independent, deterministic transformation from validated
-`DocumentPage` values into validated `Chunk` values while preserving source-document and
-one-based source-page provenance.
+Implement the smallest understandable path from the canonical synthetic PDF corpus to ranked,
+provider-independent semantic retrieval results with complete document and one-based page
+provenance.
 
 ## In scope
 
-- One understandable word-window chunking strategy
-- Positive `max_words` and non-negative `overlap_words` configuration
-- Page-bounded chunks produced in source order
-- Explicit whitespace and line-ending normalization
-- Deterministic chunk text, ordering, indexes, and identifiers
-- Empty-page handling and page-sequence validation
-- Focused unit tests and a PDF-to-pages-to-chunks integration test
-- Documentation of decisions, behavior, limitations, and learning observations
+- Load and validate `data/corpus_manifest.csv` as the canonical descriptive metadata source
+- Require a one-to-one relationship between manifest rows and PDFs in `data/raw/policies`
+- Parse PDFs through the existing Gate 1 ingestion boundary
+- Chunk pages through the existing Gate 2 deterministic page-bounded word-window chunker
+- Associate each chunk with document title, version, status, effective date, owner, filename, and
+  synthetic marker
+- Embed chunk and query text with OpenAI `text-embedding-3-small` using exactly 1,536 dimensions
+- Upsert vectors into one Pinecone Serverless dense index with cosine similarity in AWS
+  `us-east-1`
+- Configure the Pinecone index name and namespace through environment settings
+- Use existing deterministic chunk IDs as Pinecone record IDs
+- Retrieve ranked top-k evidence through provider-independent application models
+- Exclude superseded documents by default and include them only when explicitly requested
+- Use deterministic provider test doubles for routine tests and one explicitly marked live smoke
+  test that skips when either provider credential is absent
+- Add a small named set of synthetic retrieval smoke questions across distinct policy areas
+
+Only PDFs are indexed. The editable source Markdown exists for corpus maintenance and must not be
+indexed because doing so would duplicate content.
 
 ## Out of scope
 
-- Embeddings and model-specific tokenization
-- Vector databases, indexes, similarity search, retrieval, and reranking
-- LLM calls, prompts, generation, RAG, and citations beyond provenance fields
-- OCR, layout reconstruction, and table extraction
-- Semantic or agentic chunking and multiple chunking strategies
+- LLM answer generation, RAG prompts, final-answer generation, or answer citations
+- Reranking, lexical search, hybrid search, or provider-comparison experiments
+- Multiple embedding providers or vector databases
+- Model-specific, semantic, layout-aware, or agentic chunking
+- OCR, scanned-document support, or layout reconstruction
+- Structured analytics, graph retrieval, orchestration, routing, agents, or memory
+- APIs, command-line interfaces, user interfaces, deployment, or Gate 4 work
 - LangChain and LlamaIndex
-- APIs, command-line tools, and user interfaces
-- Analytics, graphs, agents, memory, voice, and deployment
-- Gate 3 functionality and placeholder dependencies for future gates
 
-## Model and provenance decision
+## Accepted decisions
 
-`Chunk.page` is renamed to required `Chunk.page_number` so `DocumentPage` and `Chunk` use the same
-one-based terminology. A chunk cannot span pages. `chunk_index` is a zero-based, document-wide
-sequence over emitted chunks, so empty pages do not create gaps and chunks remain unambiguously
-ordered across the input document.
+- The embedding boundary returns application-owned vectors and exposes no OpenAI response types.
+- The vector-index boundary accepts application-owned records and returns application-owned scored
+  matches; Pinecone response types remain inside its adapter.
+- The OpenAI embedding adapter always sends model `text-embedding-3-small` and
+  `dimensions=1536`.
+- The Pinecone adapter may create an index only after validating all six approved settings: dense
+  vectors, 1,536 dimensions, cosine metric, AWS cloud, `us-east-1` region, and a configured index
+  name. Namespace is also required and environment-configured.
+- Stable manifest document IDs are derived from the PDF filename stem. Filenames and derived IDs
+  must both be unique.
+- Manifest status is the closed set `CURRENT` and `SUPERSEDED`; synthetic is the closed manifest
+  value `YES`. Effective dates use the manifest format `%d %B %Y` and provider metadata uses ISO
+  `YYYY-MM-DD` strings.
+- Indexing uses idempotent upsert with existing Gate 2 chunk IDs. The vector index is derived,
+  rebuildable state and is created with deletion protection disabled; this gate does not add
+  deletion or stale-record reconciliation.
+- The corpus build uses the accepted Gate 2 validation baseline of max_words=300 and
+  overlap_words=50.
+- Chunk text is stored with primitive provenance metadata so a retrieval match can be mapped
+  without a provider-shaped domain model or a second content store.
+- Retrieval scores are Pinecone cosine similarity scores: higher means more similar. Tests do not
+  rely on exact live-provider scores.
+- When scores tie, application results are ordered by descending score and then ascending chunk
+  ID, providing deterministic ordering where the application controls it.
 
-The pre-existing optional `section` and `metadata` fields remain part of the domain contract, but
-Gate 2 does not infer or populate them because word windows do not provide reliable section or
-metadata semantics.
+See ADR 0004 for the rationale and consequences.
 
-Chunk IDs have the form:
+## Public behavior and errors
 
-```text
-<URL-encoded-document-id>:p<four-digit-page-number>:c<six-digit-document-index>
-```
+- Manifest paths must exist and refer to regular files.
+- The header must match the required schema exactly. Blank values, malformed dates, invalid status
+  or synthetic values, duplicate filenames, duplicate document IDs, missing PDFs, and unlisted PDFs
+  fail with a manifest-validation error that identifies the problem.
+- Embedding inputs must be nonblank. Provider-returned vector counts and dimensions are validated.
+- Query text must be nonblank and `top_k` must be a positive non-boolean integer.
+- `top_k` larger than the number of matches returns all available matches; no matches returns an
+  empty list.
+- Retrieval defaults to a `CURRENT` status metadata filter. Explicit superseded inclusion omits
+  that filter so both versions may coexist and be searched.
+- Missing OpenAI or Pinecone credentials/configuration fail during live adapter construction with
+  configuration errors, without displaying secret values.
+- Provider SDK exceptions are translated to application embedding or vector-index errors.
+- Any vector dimension other than 1,536, or a mismatched existing Pinecone index configuration,
+  fails before upsert/query proceeds.
+- The live smoke test is explicitly marked and skips cleanly unless both API keys, index name, and
+  namespace are configured.
 
-For example, `policy-001:p0002:c000003`. IDs are derived only from validated provenance and
-ordering; no random values are used.
+## Expected outputs
 
-## Chunk-size, overlap, and normalization behavior
-
-- Text is split with Python's `str.split()`, which trims leading and trailing whitespace and
-  treats runs of spaces, tabs, and line endings as a single separator.
-- Chunk text is rebuilt with one ASCII space between words.
-- Case, punctuation, and word content are otherwise preserved.
-- Every chunk contains at most `max_words` words.
-- The next window advances by `max_words - overlap_words`.
-- Adjacent chunks from the same page share exactly `overlap_words` words when another window is
-  required and enough words exist.
-- Overlap never crosses a page boundary.
-- Empty and whitespace-only pages produce no chunks and do not change later page numbers.
-
-## Input and error behavior
-
-- No pages returns an empty list after configuration validation.
-- One page and ordered page subsets are accepted.
-- Page numbers must be strictly increasing, but need not begin at 1 or be contiguous. This lets
-  callers chunk a valid subset without inventing missing content.
-- All pages in one call must have the same `document_id`.
-- Duplicate or out-of-order page numbers raise `ValueError`.
-- Mixed document IDs raise `ValueError`.
-- `max_words` must be an integer greater than zero.
-- `overlap_words` must be an integer greater than or equal to zero and strictly smaller than
-  `max_words`; invalid configuration raises `ValueError` before page iteration.
-- Inputs that are not `DocumentPage` instances raise `TypeError`.
-- Invalid `DocumentPage` and `Chunk` construction fails Pydantic domain validation.
-
-## Expected output
-
-The chunker returns validated `Chunk` values in deterministic document order. Consumers see only
-application-domain types and need not know whether pages originated from `pypdf` or another
-earlier ingestion step.
+Indexing returns a provider-independent summary containing document, chunk, and upsert counts.
+Retrieval returns ranked values containing chunk ID, document ID, chunk text, one-based page
+number, title, version, document status, source filename, rank, and similarity score.
 
 ## Exit criteria
 
-- [x] Gate 1 is formally recorded as accepted with its verification evidence retained
-- [x] Valid pages produce validated chunks deterministically
-- [x] Deterministic IDs and zero-based document-wide indexes are tested
-- [x] Every chunk retains its document ID and one-based page provenance
-- [x] Chunks are page-bounded and maximum word size and overlap are enforced
-- [x] Empty and whitespace-only page behavior is documented and tested
-- [x] Invalid configuration, mixed documents, and invalid page sequences fail clearly
-- [x] Unit tests cover chunking boundaries and domain validation
-- [x] An integration test covers synthetic PDF parsing followed by chunking
-- [x] The complete test suite passes without unexpected warnings
-- [x] Ruff passes
-- [x] Editable-package imports succeed without a pytest path shortcut
-- [x] Installed dependencies have no broken requirements
-- [x] Documentation and the Gate 2 ADR describe actual behavior
-- [x] No secrets, Gate 3 implementation, or future provider SDKs are present
+- [x] Gate 2 is formally accepted, committed, and reverified
+- [x] The owner approved the OpenAI/Pinecone stack and regional constraint
+- [x] The approved provider, index, metadata, filtering, and rebuild decisions are recorded
+- [x] Manifest and one-to-one corpus validation are implemented and tested
+- [x] Every indexed chunk retains correct document and one-based page provenance
+- [x] OpenAI request/response mapping and vector dimensions are tested with deterministic doubles
+- [x] Pinecone record construction, configuration validation, and idempotent upsert are tested
+- [x] Current-only retrieval and explicit superseded inclusion are demonstrated
+- [x] Nonblank query, positive top-k, empty results, tie ordering, and provider errors are tested
+- [x] A local end-to-end synthetic PDF-to-retrieval integration test passes without network access
+- [x] Named retrieval smoke questions are documented and exercised
+- [x] The complete deterministic test suite and Ruff pass
+- [x] Installed dependencies are healthy and editable-package imports succeed
+- [ ] The real-provider smoke test remains unrun because all four live settings are absent
+- [x] No secrets or out-of-scope technologies are present
+- [x] Documentation describes actual implemented behavior and Gate 4 has not started
 
-Gate 2 is **ACCEPTED**. Gate 3 has not started.
+Gate 3 is **IN PROGRESS** and must not be marked accepted without explicit owner acceptance.

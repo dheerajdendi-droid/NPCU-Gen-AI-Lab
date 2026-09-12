@@ -19,4 +19,17 @@ passed; Ruff, dependency health, editable-package import, diff, secret, and scop
 and the 11-document corpus smoke test produced 81 source pages and 194 chunks using
 `max_words=300` and `overlap_words=50`, with document and page provenance intact.
 
-Gate 3 has not started.
+## Gate 3 — IN PROGRESS
+
+Started on **2026-09-12** after Gate 2 baseline verification. The owner approved OpenAI
+`text-embedding-3-small` with explicit 1,536-dimensional output and a Pinecone Serverless dense
+cosine index in AWS `us-east-1` for synthetic-only data.
+
+Local implementation evidence on **2026-09-12**: 130 deterministic tests passed with one explicitly
+marked live test deselected; the complete 11-PDF corpus produced 81 pages and 194 enriched chunks;
+repeat indexing retained 194 stable IDs; named policy queries returned provenance-bearing evidence;
+and current-only versus explicit superseded retrieval passed. Ruff, dependency health, editable
+imports, whitespace, secret, and scope checks passed.
+
+The live environment settings were absent, so no OpenAI or Pinecone call was made and no index was
+created. Gate 3 remains pending that explicit smoke test, final owner review, and formal acceptance.
