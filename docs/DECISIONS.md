@@ -122,8 +122,9 @@ new dependency. See ADR 0006.
 
 **Decision:** CR-001 inserts Gate 5.5 after accepted Gate 5 and while Gate 6 is paused at its design
 checkpoint. Use Streamlit as a thin presentation layer over the existing grounded-answer service.
-Expose exact retrieval evidence through a recording wrapper and open the existing Pinecone index
-through a query-only surface. Preserve the Gate 6 design separately and resume it after Gate 5.5.
+Expose exact retrieval evidence through a request-local recording wrapper, retain no mutable
+request state in the cached service, and open the existing Pinecone index through a query-only
+surface. Preserve the Gate 6 design separately and resume it after Gate 5.5.
 
 **Reason:** The coursework requires a clear live demonstration of policy RAG, citations, version
 filtering, and abstention. A small interface improves demonstrability without moving retrieval or

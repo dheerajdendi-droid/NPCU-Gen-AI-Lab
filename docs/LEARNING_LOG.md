@@ -234,8 +234,9 @@ only when evidence exists.
 
 ## Gate 5.5 implementation observations
 
-- A recording wrapper can expose the exact retrieval supplied to generation without issuing a
-  second query or coupling Streamlit to a provider response type.
+- A request-local recording wrapper can expose the exact retrieval supplied to generation without
+  issuing a second query or coupling Streamlit to a provider response type. Retaining the recorder
+  in a globally cached service would allow concurrent requests to overwrite one another's evidence.
 - A separate query-only Pinecone surface makes the demo's no-write boundary executable: index
   existence and compatibility are inspected, but creation and upsert are unavailable.
 - Application-owned citation records keep the model from inventing page, version, status, or source

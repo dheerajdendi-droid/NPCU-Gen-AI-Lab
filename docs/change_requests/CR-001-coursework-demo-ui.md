@@ -28,6 +28,7 @@ evidence used by the answer path.
 - Live composition opens the existing Pinecone index through a query-only surface.
 - All displayed document provenance comes from application-owned answer and retrieval models.
 - The interface uses synthetic policies only and clearly says so.
+- Globally cached services must not retain mutable evidence or other request-specific state.
 
 ## Non-goals
 

@@ -134,3 +134,11 @@ blank input local, displayed authoritative citations and exact retrieval details
 existing insufficient-evidence state without sources. Four authorized UI questions covered current
 policy, explicit version support, cross-document payroll-failure handling, and an unsupported
 cryptocurrency topic. All provider activity was query-only; Gate 5.5 remains pending owner review.
+
+Subsequent owner review identified one material concurrency blocker: the globally cached coursework
+service retained mutable evidence-recorder state. The implementation was changed so every `ask()`
+call owns its recorder and grounded-answer coordinator. A deterministic two-thread test forces an
+interleaving that would have exposed the original crossover and verifies both answers retain their
+own evidence and citations. Post-fix verification passed 207 deterministic tests with three live
+tests skipped, plus Ruff, dependency, import, and whitespace checks. Gate 5.5 remains pending owner
+re-review.

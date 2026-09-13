@@ -29,7 +29,7 @@ embedding and vector-index boundaries, idempotent indexing, metadata-filtered re
 provider-independent results are implemented. The live OpenAI/Pinecone path passed and Gate 3 was
 formally accepted on 2026-09-12.
 
-Current deterministic evidence: 206 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with all
+Current deterministic evidence: 207 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with all
 three live tests skipped by default even when credentials are configured. Ruff,
 installed-dependency health, editable-package imports, whitespace, credential, and scope checks
 pass. Live tests require the explicit `--run-live` option.

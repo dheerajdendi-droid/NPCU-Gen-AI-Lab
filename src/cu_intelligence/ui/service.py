@@ -56,26 +56,28 @@ class _RecordingRetriever:
 
 
 class CourseworkDemoService:
-    """Call the accepted answer service once and retain its exact evidence."""
+    """Call the accepted answer path with request-local evidence recording."""
 
     def __init__(
         self,
         retriever: EvidenceRetriever,
         generation_provider: GenerationProvider,
     ) -> None:
-        self._recording_retriever = _RecordingRetriever(retriever)
-        self._answer_service = GroundedAnswerService(
-            self._recording_retriever,
-            generation_provider,
-        )
+        self._retriever = retriever
+        self._generation_provider = generation_provider
 
     def ask(self, question: str) -> CourseworkDemoResult:
         """Return the existing grounded answer and its retrieval evidence."""
 
-        answer = self._answer_service.answer(question)
+        recording_retriever = _RecordingRetriever(self._retriever)
+        answer_service = GroundedAnswerService(
+            recording_retriever,
+            self._generation_provider,
+        )
+        answer = answer_service.answer(question)
         return CourseworkDemoResult(
             answer=answer,
-            evidence=self._recording_retriever.last_results,
+            evidence=recording_retriever.last_results,
         )
 
 

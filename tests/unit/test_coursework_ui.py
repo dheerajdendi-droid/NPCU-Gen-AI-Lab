@@ -1,7 +1,9 @@
 """Tests for the thin Gate 5.5 coursework presentation boundary."""
 
 from collections.abc import Sequence
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
+from threading import Event
 
 from cu_intelligence.domain import DocumentStatus, RetrievalResult
 from cu_intelligence.generation import (
@@ -16,13 +18,17 @@ from cu_intelligence.ui.service import (
 )
 
 
-def _result() -> RetrievalResult:
+def _result(
+    *,
+    chunk_id: str = "policy:p0002:c000001",
+    title: str = "Synthetic Lending Policy",
+) -> RetrievalResult:
     return RetrievalResult(
-        chunk_id="policy:p0002:c000001",
+        chunk_id=chunk_id,
         document_id="policy",
         chunk_text="Synthetic policy evidence " * 40,
         page_number=2,
-        title="Synthetic Lending Policy",
+        title=title,
         version="4.0",
         document_status=DocumentStatus.CURRENT,
         effective_date=date(2026, 1, 1),
@@ -88,6 +94,54 @@ def test_demo_service_keeps_fallback_distinct_and_bypasses_generation() -> None:
     assert result.evidence == ()
     assert result.answer.status is AnswerStatus.INSUFFICIENT_EVIDENCE
     assert result.answer.citations == ()
+
+
+def test_concurrent_questions_keep_request_local_evidence() -> None:
+    first_source = _result(
+        chunk_id="policy:p0002:c000001",
+        title="First Synthetic Policy",
+    )
+    second_source = _result(
+        chunk_id="policy:p0003:c000001",
+        title="Second Synthetic Policy",
+    )
+    first_generation_started = Event()
+    release_first_generation = Event()
+
+    class ConcurrentRetriever:
+        def retrieve(self, query, *, top_k=5, include_superseded=False):
+            del top_k, include_superseded
+            return [first_source if query == "Question A" else second_source]
+
+    class CoordinatedGenerator:
+        def generate(self, question, evidence):
+            if question == "Question A":
+                first_generation_started.set()
+                assert release_first_generation.wait(timeout=5)
+            return GenerationDraft(
+                status=AnswerStatus.ANSWERED,
+                statements=(
+                    DraftStatement(
+                        text=f"Grounded response for {question}.",
+                        cited_chunk_ids=(evidence[0].chunk_id,),
+                    ),
+                ),
+                insufficient_evidence_explanation=None,
+            )
+
+    service = CourseworkDemoService(ConcurrentRetriever(), CoordinatedGenerator())
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first_future = executor.submit(service.ask, "Question A")
+        assert first_generation_started.wait(timeout=5)
+        second_result = executor.submit(service.ask, "Question B").result(timeout=5)
+        release_first_generation.set()
+        first_result = first_future.result(timeout=5)
+
+    assert first_result.evidence == (first_source,)
+    assert first_result.answer.citations[0].chunk_id == first_source.chunk_id
+    assert second_result.evidence == (second_source,)
+    assert second_result.answer.citations[0].chunk_id == second_source.chunk_id
 
 
 def test_evidence_preview_is_compact_without_changing_source() -> None:

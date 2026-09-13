@@ -31,10 +31,12 @@ observe the existing insufficient-evidence behavior, and inspect the exact retri
 
 ## Architecture
 
-The Streamlit module performs input handling and rendering only. `CourseworkDemoService` wraps the
-accepted `GroundedAnswerService` with a recording retriever so the exact evidence already supplied
-to generation can be shown for demonstration. It does not change ranking, filtering, prompting,
-generation, grounding, citation validation, or fallback rules.
+The Streamlit module performs input handling and rendering only. For each `ask()` call,
+`CourseworkDemoService` creates a request-local `GroundedAnswerService` and recording retriever so
+the exact evidence already supplied to that request's generation can be shown for demonstration.
+The globally cached composition retains reusable adapters but no request-specific retrieval state.
+It does not change ranking, filtering, prompting, generation, grounding, citation validation, or
+fallback rules.
 
 The live composition loads existing environment settings, confirms that the configured Pinecone
 index exists, and supplies `PineconeVectorIndex` with a control and data surface that expose only
@@ -75,6 +77,8 @@ not displayed.
 ## Verification
 
 - Unit tests prove that the UI integration invokes the existing answer path once.
+- A deterministic interleaving test proves that two concurrent questions retain their own evidence
+  and citations instead of sharing recorder state.
 - Citation metadata and exact retrieval evidence are preserved.
 - Empty retrieval retains the accepted insufficient-evidence result and bypasses generation.
 - The Pinecone data wrapper exposes query but no upsert operation.
@@ -95,6 +99,13 @@ The cryptocurrency question returned `INSUFFICIENT_EVIDENCE` without sources. Th
 retrieval panel displayed application-owned rank, similarity score, version, status, page, and
 source-text previews. These four checks issued query-only provider operations; no index creation or
 vector mutation path was exposed.
+
+Owner review then identified that the cached service retained one mutable recorder across calls.
+The blocker was corrected by moving the recorder and grounded-answer coordinator inside `ask()`.
+A deterministic two-thread regression test forces the first generation to pause while the second
+question completes and proves that each result retains its own evidence and citation. Post-fix
+verification passed **207 tests** with three live tests skipped; Ruff, dependency health, imports,
+and whitespace checks passed.
 
 ## Out of scope
 

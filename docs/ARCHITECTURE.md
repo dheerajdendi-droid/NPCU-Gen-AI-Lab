@@ -144,9 +144,10 @@ claim production accuracy or tune the accepted system.
 2. A coursework composition loads the existing provider configuration and requires the accepted
    Pinecone index to exist.
 3. A query-only Pinecone surface prevents the presentation path from creating or upserting data.
-4. `CourseworkDemoService` invokes the accepted `GroundedAnswerService` once.
-5. A recording retriever retains the exact ranked `RetrievalResult` values already supplied to
-   generation; it does not perform a second retrieval.
+4. For each question, `CourseworkDemoService` creates a request-local recording retriever and invokes
+   the accepted `GroundedAnswerService` once.
+5. The request-local recorder retains the exact ranked `RetrievalResult` values already supplied to
+   that generation call; it does not perform a second retrieval or retain cross-request state.
 6. Streamlit renders answer statements, application-owned citations, or the existing
    insufficient-evidence outcome.
 7. An optional collapsed panel renders real rank, similarity score, source provenance, and a short
@@ -173,8 +174,9 @@ claim production accuracy or tune the accepted system.
       (query only)
 ```
 
-The presentation layer contains no RAG business logic. A later interface may replace or extend it
-without changing the accepted retrieval, generation, or citation contracts.
+The presentation layer contains no RAG business logic. Its globally cached service contains reusable
+provider adapters only; mutable evidence recording is scoped to one `ask()` call. A later interface
+may replace or extend it without changing the accepted retrieval, generation, or citation contracts.
 
 ## Proposed Gate 6 workbook-to-analysis flow
 
