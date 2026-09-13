@@ -1,14 +1,15 @@
 # Architecture
 
-This document describes the intended architecture, the capabilities accepted through Gate 5, and
-the proposed Gate 6 structured-analytics boundary.
+This document describes the intended architecture, the capabilities accepted through Gate 5, the
+Gate 5.5 coursework presentation layer introduced by CR-001, and the preserved proposed Gate 6
+structured-analytics boundary.
 The foundation, page-aware PDF parsing, and deterministic page-bounded chunk construction are
 accepted through Gate 2. Gate 3 metadata-aware semantic retrieval is implemented and accepted
 after live OpenAI and Pinecone verification. Gate 4 grounded generation is accepted after offline
 verification, a focused six-scenario live test, and owner review. Gate 5 adds an accepted local
 evaluation boundary without changing retrieval or generation. Later capabilities remain plans;
 Gate 6 is paused at its documentation-only design checkpoint; no analytics dependency, data, or
-implementation has been added.
+implementation has been added. Gate 5.5 does not change the accepted RAG path.
 
 ## Capability boundaries
 
@@ -30,6 +31,8 @@ implementation has been added.
    Gate 5 keeps a protected synthetic case dataset outside ingestion, scores retrieval and grounded
    answers separately, records distinct human review, and emits provider-independent reports and
    fingerprints.
+8. **Presentation** renders application-owned answers and evidence. Gate 5.5 uses Streamlit as a
+   replaceable coursework surface with no retrieval or generation business logic.
 
 The application domain sits inside these boundaries and does not depend on provider response
 types. OpenAI and Pinecone adapters map SDK objects to application-owned vectors, records, matches,
@@ -76,9 +79,10 @@ but it should not blur their responsibilities.
 4. Metadata-aware embeddings and semantic retrieval
 5. Grounded generation and citations
 6. Retrieval and answer evaluation
-7. Structured analytics
-8. Graph capabilities
-9. Orchestration, external retrieval, memory, voice, and deployment polish
+7. Gate 5.5 coursework demonstration UI introduced by CR-001
+8. Structured analytics
+9. Graph capabilities
+10. Orchestration, external retrieval, memory, voice, and deployment polish
 
 The core MVP—document RAG, structured analytics, citations, evaluation, and a usable
 interface—should be completed and stabilised before optional extensions such as graph retrieval,
@@ -133,6 +137,44 @@ behavior, while application validation constrains every accepted statement to re
 Evaluation questions and reference facts are not corpus documents. They are never parsed, chunked,
 indexed or supplied as answer evidence. Gate 5 establishes a small synthetic baseline and does not
 claim production accuracy or tune the accepted system.
+
+## Gate 5.5 presentation flow
+
+1. Streamlit accepts one policy question and performs local blank-input validation.
+2. A coursework composition loads the existing provider configuration and requires the accepted
+   Pinecone index to exist.
+3. A query-only Pinecone surface prevents the presentation path from creating or upserting data.
+4. `CourseworkDemoService` invokes the accepted `GroundedAnswerService` once.
+5. A recording retriever retains the exact ranked `RetrievalResult` values already supplied to
+   generation; it does not perform a second retrieval.
+6. Streamlit renders answer statements, application-owned citations, or the existing
+   insufficient-evidence outcome.
+7. An optional collapsed panel renders real rank, similarity score, source provenance, and a short
+   evidence preview without exposing model reasoning.
+
+```text
+                USER
+                  |
+                  v
+          STREAMLIT UI
+                  |
+                  v
+       COURSEWORK DEMO SERVICE
+                  |
+                  v
+      GROUNDED ANSWER SERVICE
+                  |
+        +---------+---------+
+        v                   v
+    RETRIEVAL           GENERATION
+        |
+        v
+ EXISTING VECTOR INDEX
+      (query only)
+```
+
+The presentation layer contains no RAG business logic. A later interface may replace or extend it
+without changing the accepted retrieval, generation, or citation contracts.
 
 ## Proposed Gate 6 workbook-to-analysis flow
 

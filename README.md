@@ -7,9 +7,9 @@ educational RAG project and an exercise in designing an enterprise GenAI archite
 Development proceeds through explicit gates so that each layer is understood, tested, and
 documented before the next is introduced. **Gates 0–5 are accepted.** Gate 5's protected 20-case
 evaluation passed deterministic verification and a directly authorized read-only live baseline
-before owner acceptance on 2026-09-13. Gate 6 is at a documentation-only design checkpoint awaiting
-owner approval; no analytics dependency, workbook, database, or implementation has been added.
-Future capabilities described in the architecture are plans, not current features.
+before owner acceptance on 2026-09-13. CR-001 inserts Gate 5.5, a minimal Streamlit coursework UI,
+while Gate 6 analytics remains paused at its preserved documentation-only design checkpoint. No
+analytics dependency, workbook, database, or implementation has been added.
 
 ## Delivery outlook
 
@@ -49,6 +49,11 @@ provenance and version handling; renders deterministic JSON and Markdown; provid
 human-review templates; and fingerprints the dataset, corpus and public configuration. It does not
 tune retrieval or prompting and does not use an LLM judge.
 
+Gate 5.5 adds a thin Streamlit presentation layer. It sends one question through the accepted
+grounded-answer service, displays application-owned citations and the existing insufficient-evidence
+outcome, and can show the exact ranked evidence supplied to generation. Its live Pinecone surface
+supports queries only and cannot create or upsert records.
+
 The version-controlled synthetic corpus baseline contains 11 PDFs, a manifest, explanatory
 documentation, and matching editable Markdown sources. The PDFs are the canonical
 retrieval input; source Markdown must not be indexed alongside them.
@@ -56,8 +61,8 @@ retrieval input; source Markdown must not be indexed alongside them.
 Gate 3 uses OpenAI text-embedding-3-small with explicit 1,536-dimensional output and a Pinecone
 Serverless dense cosine index in AWS us-east-1. Index name, namespace, and credentials are
 environment settings. This managed path is approved for synthetic data only. The project does not
-perform OCR, model-specific chunking, reranking, hybrid search, APIs, user interfaces, general
-orchestration, or Gate 6 functionality.
+perform OCR, model-specific chunking, reranking, hybrid search, APIs, general orchestration, or Gate
+6 analytics functionality.
 
 ## Local setup
 
@@ -117,6 +122,20 @@ queries:
 ```text
 python -m pytest --run-live tests/integration/test_live_evaluation.py -vv -s
 ```
+
+## Running the coursework demo
+
+Configure `OPENAI_API_KEY`, `PINECONE_API_KEY`, `PINECONE_INDEX_NAME`, and
+`PINECONE_NAMESPACE` in the environment or ignored `.env`, then run:
+
+```text
+python -m streamlit run src/cu_intelligence/ui/streamlit_app.py --server.address localhost
+```
+
+The demo sends policy questions and retrieved synthetic evidence to the accepted OpenAI and
+Pinecone services and may incur provider cost. It demonstrates semantic policy retrieval,
+current-policy filtering, grounded generation, application-owned page citations, and explicit
+insufficient-evidence behavior. It does not implement hybrid search or reranking.
 
 See [the current gate](docs/CURRENT_GATE.md) and [project state](docs/PROJECT_STATE.md) before
 starting any implementation work.

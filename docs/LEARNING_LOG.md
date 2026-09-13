@@ -219,3 +219,30 @@ record concrete findings without inventing personal reflections.
 
 These are proposed Gate 6 learning objectives and do not claim mastery. Implementation observations
 will be added only after the design checkpoint is approved and evidence exists.
+
+## Gate 5.5 learning objectives
+
+- Understand the presentation layer as a consumer of application services
+- Understand why Streamlit must not own retrieval, generation, grounding, or citation logic
+- Understand the difference between a focused coursework demo and a production interface
+- Understand how authoritative citations and visible abstention help users assess trust
+- Understand how exact retrieval evidence can explain an answer without exposing chain-of-thought
+- Understand why a roadmap insertion requires an explicit change request and preserved history
+
+These are Gate 5.5 objectives and do not claim mastery. Implementation observations will be added
+only when evidence exists.
+
+## Gate 5.5 implementation observations
+
+- A recording wrapper can expose the exact retrieval supplied to generation without issuing a
+  second query or coupling Streamlit to a provider response type.
+- A separate query-only Pinecone surface makes the demo's no-write boundary executable: index
+  existence and compatibility are inspected, but creation and upsert are unavailable.
+- Application-owned citation records keep the model from inventing page, version, status, or source
+  labels; the matching retrieval result supplies the already-validated effective date for display.
+- Visible insufficient-evidence status is a product behavior, not merely an evaluation metric. The
+  unsupported live question produced no source cards or generic answer.
+- The cross-document payroll scenario visibly demonstrated that one answer can cite two current
+  policies while preserving statement-level citation markers.
+- Streamlit 1.49.1 was selected because its runtime remains compatible with the existing Python
+  environment; a newer release introduced a Starlette range that conflicted with installed FastAPI.

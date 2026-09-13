@@ -116,3 +116,21 @@ rules that prevent fact multiplication, provider-independent analytical results,
 validation, and derived DuckDB state. ADR 0007 is proposed. No dependency, workbook, database, or
 analytics implementation has been added. Work is paused for owner approval, and Gate 7 has not
 started.
+
+The design checkpoint was preserved in local commit `1f5d381`. CR-001 pauses Gate 6 before owner
+approval or implementation; it does not mark Gate 6 complete.
+
+## Gate 5.5 — IN PROGRESS
+
+Started on **2026-09-13** under CR-001 to provide a lightweight Streamlit coursework demonstration
+before Gate 6 analytics implementation. The presentation layer reuses the accepted semantic
+retrieval and grounded-answer services, retains authoritative citations and abstention, and opens
+the existing Pinecone index through a query-only composition. Gate 6 remains paused and Gate 7 has
+not started.
+
+Local verification on **2026-09-13** passed 206 deterministic tests with three live tests skipped,
+plus Ruff, dependency, import, and whitespace checks. The Streamlit page rendered correctly, kept
+blank input local, displayed authoritative citations and exact retrieval details, and returned the
+existing insufficient-evidence state without sources. Four authorized UI questions covered current
+policy, explicit version support, cross-document payroll-failure handling, and an unsupported
+cryptocurrency topic. All provider activity was query-only; Gate 5.5 remains pending owner review.

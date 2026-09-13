@@ -117,3 +117,14 @@ configuration content with SHA-256. Evaluation data is never corpus or answer ev
 **Reason:** Retrieval and generation have different failure modes, and transparent local metrics
 make those mechanics inspectable without a hosted evaluation service, LLM judge, new framework, or
 new dependency. See ADR 0006.
+
+## DEC-016 — Insert a minimal coursework UI before Gate 6 implementation
+
+**Decision:** CR-001 inserts Gate 5.5 after accepted Gate 5 and while Gate 6 is paused at its design
+checkpoint. Use Streamlit as a thin presentation layer over the existing grounded-answer service.
+Expose exact retrieval evidence through a recording wrapper and open the existing Pinecone index
+through a query-only surface. Preserve the Gate 6 design separately and resume it after Gate 5.5.
+
+**Reason:** The coursework requires a clear live demonstration of policy RAG, citations, version
+filtering, and abstention. A small interface improves demonstrability without moving retrieval or
+generation logic into the presentation layer or claiming structured analytics is implemented.

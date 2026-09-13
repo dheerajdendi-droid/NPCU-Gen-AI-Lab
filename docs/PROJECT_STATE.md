@@ -1,11 +1,11 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 6 — Structured Management Analytics — design checkpoint pending owner
-  approval
-- **Current implementation:** Capabilities accepted through Gate 5, including a provider-independent
-  local evaluation harness, protected synthetic cases, deterministic retrieval and grounded-answer
-  metrics, human-review templates, reports, and fingerprints
+- **Current gate:** Gate 5.5 — Coursework Demonstration UI — implementation verified locally and
+  pending owner review under CR-001
+- **Current implementation:** Capabilities accepted through Gate 5 plus a thin Streamlit coursework
+  interface over the existing grounded-answer service; Gate 6 analytics remains paused at its
+  preserved design checkpoint
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small`, Pinecone Serverless, and
   a live-verified OpenAI `gpt-5.6-terra` Responses adapter
 
@@ -54,12 +54,10 @@ its automated measures do not establish semantic correctness, completeness, prod
 fairness, or safety. Human ratings remain pending, and live provider rankings and prose may change.
 
 Gate 6 entered its documentation-only design checkpoint on 2026-09-13 from clean, synchronized
-commit `1070ab5`. The proposal defines one synthetic Excel workbook, strict sheet and field
-contracts, deterministic metric definitions, an internally reconciled July/August scenario,
-double-counting controls, application-owned results, DuckDB as derived state, and openpyxl as the
-minimal Excel reader. No dependency has been installed, no workbook or database has been created,
-and no analytics code has been implemented. Owner approval is required before implementation.
-Gate 7 has not started.
+commit `1070ab5`. Its proposal was preserved at local commit `1f5d381`. No analytics dependency,
+workbook, database, or implementation exists. CR-001 temporarily pauses that work and inserts Gate
+5.5, a minimal Streamlit coursework interface over the accepted RAG path. Gate 6 will resume only
+after Gate 5.5 review; Gate 7 has not started.
 
 ## Planned future capability areas
 
