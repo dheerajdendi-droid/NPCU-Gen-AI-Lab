@@ -5,6 +5,10 @@ paused at its documentation-only design checkpoint. It brings forward a small co
 presentation surface without renumbering accepted gates or claiming that structured analytics has
 been implemented. Gate 6 will resume after this change is reviewed; Gate 7 has not started.
 
+> **Handoff:** The earlier external brief labelled this work “Gate 6.5”. That label is superseded in
+> this repository. Its intended UI work is already implemented at commit `42b0c73`; do not run the
+> old prompt again. Review Gate 5.5, then resume the separately preserved Gate 6 design checkpoint.
+
 ## Objective
 
 Provide a minimal Streamlit interface over the accepted policy retrieval and grounded-answer path

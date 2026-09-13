@@ -9,6 +9,19 @@
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small`, Pinecone Serverless, and
   a live-verified OpenAI `gpt-5.6-terra` Responses adapter
 
+## Codex handoff
+
+- The externally drafted **Gate 6.5** coursework-UI brief has already been implemented in this
+  repository as **Gate 5.5** under CR-001 at commit `42b0c73`.
+- Do **not** run that older Gate 6.5 implementation prompt against this checkout. Doing so would
+  duplicate completed work and could create conflicting edits.
+- The only current action is owner review and, if requested, formal acceptance of Gate 5.5.
+- After Gate 5.5 is accepted, resume Gate 6 from
+  `docs/gate_designs/GATE_6_STRUCTURED_ANALYTICS_CHECKPOINT.md`; do not redesign it from the old UI
+  prompt.
+- Only one Codex task should make changes in this checkout at a time. Other Codex surfaces may review
+  the committed diff, but should not independently implement the same gate.
+
 Gate 0 and Gate 1 were formally accepted on 2026-09-10. Gate 2 was formally accepted on
 2026-09-12. Gate 3 started on 2026-09-12 after the owner approved an OpenAI embedding and Pinecone
 vector-index stack for the synthetic-only corpus. Manifest validation, PDF-to-chunk enrichment,
@@ -16,7 +29,7 @@ embedding and vector-index boundaries, idempotent indexing, metadata-filtered re
 provider-independent results are implemented. The live OpenAI/Pinecone path passed and Gate 3 was
 formally accepted on 2026-09-12.
 
-Current deterministic evidence: 202 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with all
+Current deterministic evidence: 206 tests pass over the 11-PDF, 81-page, 194-chunk corpus, with all
 three live tests skipped by default even when credentials are configured. Ruff,
 installed-dependency health, editable-package imports, whitespace, credential, and scope checks
 pass. Live tests require the explicit `--run-live` option.
@@ -37,7 +50,8 @@ Gate 5 started on 2026-09-12 from clean, synchronized commit `0126705`. Its acce
 local provider-independent evaluation harness, twenty protected synthetic cases, separate retrieval
 and grounded-answer measures, deterministic reports and fingerprints, distinct human review, and
 one explicitly authorized read-only live baseline. No retrieval or generation tuning, hosted eval
-service, LLM judge, framework, or new dependency is planned. Gate 6 has not started.
+service, LLM judge, framework, or new dependency was planned. At that checkpoint Gate 6 had not
+started; it has since reached the documentation-only design checkpoint described below.
 
 Gate 5 contains 20 validated cases with the required 12 current, three multi-document, three
 unsupported/adversarial and two historical split. After direct authorization, the read-only live
