@@ -4,6 +4,10 @@ NPCU GenAI Intelligence Lab is a production-style learning project for a fiction
 union. All credit-union data used by the project will be synthetic. The repository is both an
 educational RAG project and an exercise in designing an enterprise GenAI architecture.
 
+> **Coursework reviewers:** Start with the
+> [coursework reviewer guide](COURSEWORK_README.md) for a repository tour, an offline assessment
+> route, and an optional live end-to-end RAG demonstration using reviewer-owned credentials.
+
 Development proceeds through explicit gates so that each layer is understood, tested, and
 documented before the next is introduced. **Gates 0–5 are accepted.** Gate 5's protected 20-case
 evaluation passed deterministic verification and a directly authorized read-only live baseline
