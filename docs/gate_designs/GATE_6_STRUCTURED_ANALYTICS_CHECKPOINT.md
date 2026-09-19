@@ -425,6 +425,6 @@ remains the system of record.
 9. Generate deterministic prose from fixed templates and leave any narrative generation or
    combined policy answer to a later, separately approved gate.
 
-Implementation remains paused at this checkpoint pending explicit owner approval and completion of
-the intervening Gate 5.5 coursework UI change request. This file preserves the reviewed design
-while `docs/CURRENT_GATE.md` tracks the active gate.
+Gate 5.5 was formally accepted on 2026-09-19. Gate 6 implementation remains paused at this
+checkpoint pending explicit owner approval of the design, dependencies, and nine assumptions. This
+file preserves the proposed design while `docs/CURRENT_GATE.md` tracks the active approval state.

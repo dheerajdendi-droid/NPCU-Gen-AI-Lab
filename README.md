@@ -9,11 +9,12 @@ educational RAG project and an exercise in designing an enterprise GenAI archite
 > route, and an optional live end-to-end RAG demonstration using reviewer-owned credentials.
 
 Development proceeds through explicit gates so that each layer is understood, tested, and
-documented before the next is introduced. **Gates 0–5 are accepted.** Gate 5's protected 20-case
+documented before the next is introduced. **Gates 0–5.5 are accepted.** Gate 5's protected 20-case
 evaluation passed deterministic verification and a directly authorized read-only live baseline
-before owner acceptance on 2026-09-13. CR-001 inserts Gate 5.5, a minimal Streamlit coursework UI,
-while Gate 6 analytics remains paused at its preserved documentation-only design checkpoint. No
-analytics dependency, workbook, database, or implementation has been added.
+before owner acceptance on 2026-09-13. CR-001 inserted Gate 5.5, a minimal Streamlit coursework UI,
+which was formally accepted on 2026-09-19. Gate 6 analytics is awaiting approval at its preserved
+documentation-only design checkpoint. No analytics dependency, workbook, database, or
+implementation has been added.
 
 ## Delivery outlook
 

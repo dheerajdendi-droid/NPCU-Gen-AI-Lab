@@ -120,7 +120,7 @@ started.
 The design checkpoint was preserved in local commit `1f5d381`. CR-001 pauses Gate 6 before owner
 approval or implementation; it does not mark Gate 6 complete.
 
-## Gate 5.5 — IN PROGRESS
+## Gate 5.5 — ACCEPTED
 
 Started on **2026-09-13** under CR-001 to provide a lightweight Streamlit coursework demonstration
 before Gate 6 analytics implementation. The presentation layer reuses the accepted semantic
@@ -133,12 +133,21 @@ plus Ruff, dependency, import, and whitespace checks. The Streamlit page rendere
 blank input local, displayed authoritative citations and exact retrieval details, and returned the
 existing insufficient-evidence state without sources. Four authorized UI questions covered current
 policy, explicit version support, cross-document payroll-failure handling, and an unsupported
-cryptocurrency topic. All provider activity was query-only; Gate 5.5 remains pending owner review.
+cryptocurrency topic. All provider activity was query-only.
 
 Subsequent owner review identified one material concurrency blocker: the globally cached coursework
 service retained mutable evidence-recorder state. The implementation was changed so every `ask()`
 call owns its recorder and grounded-answer coordinator. A deterministic two-thread test forces an
 interleaving that would have exposed the original crossover and verifies both answers retain their
 own evidence and citations. Post-fix verification passed 207 deterministic tests with three live
-tests skipped, plus Ruff, dependency, import, and whitespace checks. Gate 5.5 remains pending owner
-re-review.
+tests skipped, plus Ruff, dependency, import, and whitespace checks.
+
+Acceptance-day offline verification on **2026-09-19** again passed 207 deterministic tests while
+skipping all three live tests by default. Ruff, installed-dependency health, editable-package
+import, whitespace, tracked-credential, documentation-link, and Gate 6 scope scans passed. No
+OpenAI or Pinecone call was made, and no Gate 6 analytics dependency or implementation was found.
+
+The owner formally accepted Gate 5.5 on **2026-09-19**. Acceptance retains the synthetic-only data
+boundary, current-policy default, query-only Pinecone composition, generic user-facing provider
+errors, and the documented limitations of the lightweight coursework interface. Gate 6 returns to
+its preserved design-approval checkpoint; no Gate 6 implementation or Gate 7 work has started.

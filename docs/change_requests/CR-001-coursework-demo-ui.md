@@ -7,6 +7,7 @@
 - **Requested after:** Gate 5 acceptance, while Gate 6 remains paused at design checkpoint
 - **Priority:** High for coursework submission
 - **Impact on long-term architecture:** Low
+- **Status:** Accepted on 2026-09-19
 
 ## Reason
 
@@ -39,4 +40,5 @@ JavaScript, and production frontend work remain outside CR-001.
 ## Effect on Gate 6
 
 Gate 6 remains paused before implementation. Its approved/proposed workbook, metric, dependency,
-and test design is preserved as a separate checkpoint and will resume only after Gate 5.5 review.
+and test design is preserved as a separate checkpoint. Following Gate 5.5 acceptance, Gate 6 is
+awaiting explicit owner approval of that design before implementation.

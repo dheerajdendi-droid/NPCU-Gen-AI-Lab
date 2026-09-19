@@ -43,9 +43,8 @@ Question -> OpenAI embedding -> Pinecone query (CURRENT by default)
 
 ## Current scope and status
 
-- Gates 0-5 are formally accepted.
-- Gate 5.5, the coursework demonstration UI, is implemented and locally verified but remains
-  pending owner acceptance.
+- Gates 0-5.5 are formally accepted.
+- Gate 5.5, the coursework demonstration UI, was formally accepted on 2026-09-19.
 - Gate 6 structured analytics is paused at a documentation-only design checkpoint.
 - OCR, scanned PDFs, hybrid retrieval, reranking, authentication, deployment, agents, memory,
   GraphRAG, and production data controls are not implemented.
@@ -61,7 +60,7 @@ Question -> OpenAI embedding -> Pinecone query (CURRENT by default)
 | Decisions | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Concise architecture decisions |
 | Detailed ADRs | [`docs/adr/`](docs/adr/) | Parsing, chunking, retrieval, generation, and evaluation rationale |
 | Gate evidence | [`docs/GATE_LOG.md`](docs/GATE_LOG.md) | Acceptance and verification history |
-| Current UI gate | [`docs/CURRENT_GATE.md`](docs/CURRENT_GATE.md) | Gate 5.5 scope, evidence, and exclusions |
+| Coursework UI change | [`docs/change_requests/CR-001-coursework-demo-ui.md`](docs/change_requests/CR-001-coursework-demo-ui.md) | Gate 5.5 scope and constraints |
 | Synthetic corpus | [`data/raw/policies/`](data/raw/policies/) | Canonical PDFs used for retrieval |
 | Corpus metadata | [`data/corpus_manifest.csv`](data/corpus_manifest.csv) | Version, status, ownership, and source metadata |
 | Application package | [`src/cu_intelligence/`](src/cu_intelligence/) | Provider-independent models, services, and adapters |

@@ -1,137 +1,72 @@
-# Gate 5.5 — Coursework Demonstration UI
+# Gate 6 — Structured Management Analytics — Design Approval Pending
 
-Gate 5.5 was inserted on **2026-09-13** by CR-001 after Gate 5 acceptance and while Gate 6 remained
-paused at its documentation-only design checkpoint. It brings forward a small coursework
-presentation surface without renumbering accepted gates or claiming that structured analytics has
-been implemented. Gate 6 will resume after this change is reviewed; Gate 7 has not started.
+Gate 5.5 was formally accepted on **2026-09-19**. Gate 6 now returns to the documentation-only
+design checkpoint originally preserved on 2026-09-13. No Gate 6 dependency, workbook, database,
+application module, or test has been added, and Gate 7 has not started.
 
-> **Handoff:** The earlier external brief labelled this work “Gate 6.5”. That label is superseded in
-> this repository. Its intended UI work is already implemented at commit `42b0c73`; do not run the
-> old prompt again. Review Gate 5.5, then resume the separately preserved Gate 6 design checkpoint.
+The complete proposed contract is recorded in
+[`gate_designs/GATE_6_STRUCTURED_ANALYTICS_CHECKPOINT.md`](gate_designs/GATE_6_STRUCTURED_ANALYTICS_CHECKPOINT.md),
+with the proposed architecture decision in
+[`adr/0007-structured-management-analytics.md`](adr/0007-structured-management-analytics.md).
+Those documents remain proposals until the owner explicitly approves or amends them.
 
-## Objective
+## Proposed objective
 
-Provide a minimal Streamlit interface over the accepted policy retrieval and grounded-answer path
-so a coursework reviewer can ask a question, see the validated answer and authoritative citations,
-observe the existing insufficient-evidence behavior, and inspect the exact retrieval evidence.
+Build the smallest understandable structured-analytics capability that loads synthetic
+credit-union management information from one Excel workbook into DuckDB and answers defined
+analytical questions with validated rows and deterministic, parameterized SQL.
 
-## In scope
+The central demonstration question is:
 
-- One Streamlit page titled **NPCU Policy Intelligence Assistant**.
-- One policy-question input and Ask action.
-- Grounded statement rendering using existing application answer models.
-- Citation rendering using application-owned title, version, status, page, and filename metadata.
-- A clearly visible insufficient-evidence result with no generic fallback answer.
-- A collapsed retrieval-details panel containing real rank, similarity score, provenance, and a
-  short source-text preview.
-- Five example questions, including one intentionally unsupported question.
-- Existing environment configuration and live OpenAI/Pinecone adapters.
-- A query-only composition over the existing Pinecone index; the UI cannot create or upsert data.
-- Focused offline tests of the presentation integration boundary.
+> Why did arrears deteriorate in August?
 
-## Architecture
+The system will calculate measured changes and may report clearly qualified associations or
+possible contributing factors. It will not claim causal proof, use an LLM for calculation or
+explanation, or combine analytics with the accepted policy RAG path.
 
-The Streamlit module performs input handling and rendering only. For each `ask()` call,
-`CourseworkDemoService` creates a request-local `GroundedAnswerService` and recording retriever so
-the exact evidence already supplied to that request's generation can be shown for demonstration.
-The globally cached composition retains reusable adapters but no request-specific retrieval state.
-It does not change ranking, filtering, prompting, generation, grounding, citation validation, or
-fallback rules.
+## Proposed dependencies
 
-The live composition loads existing environment settings, confirms that the configured Pinecone
-index exists, and supplies `PineconeVectorIndex` with a control and data surface that expose only
-index description and query operations. A missing index fails clearly instead of being created.
+- `openpyxl>=3.1.3,<4` for strict, read-only `.xlsx` workbook inspection.
+- `duckdb>=1.5.5,<2` for embedded analytical SQL over validated application records.
+- Existing Pydantic models for application-owned validation.
+- No pandas, DuckDB Excel extension, analytics framework, OpenAI call, or Pinecone operation.
 
-```text
-USER
-  |
-  v
-STREAMLIT UI
-  |
-  v
-COURSEWORK DEMO SERVICE
-  |
-  v
-ACCEPTED GROUNDED ANSWER SERVICE
-  |
-  +--> SEMANTIC RETRIEVAL --> EXISTING PINECONE INDEX (QUERY ONLY)
-  |
-  +--> OPENAI GENERATION --> VALIDATED GROUNDED ANSWER
-```
+These dependencies must not be installed until the owner approves the design checkpoint.
 
-## User and data boundary
+## Assumptions requiring explicit owner approval
 
-The interface states that the policies are synthetic and contain no real member data. Questions
-and retrieved synthetic evidence are sent through the already accepted live provider path. API
-keys, index names, namespaces, stack traces, complete prompts, and provider response objects are
-not displayed.
+1. Use the July and August 2026 closed periods and GBP amounts in the preserved checkpoint.
+2. Define PAR30 as the outstanding balance of loans at least 30 days past due divided by total
+   outstanding balance.
+3. Measure contact completion per scheduled action, not per distinct loan.
+4. Treat `PARTIAL` and `FAILED` payments as non-success while reporting hard failures separately.
+5. Define the affected cohort from explicit August payment-to-payroll-event links and compare the
+   same loans with their July records.
+6. Permit only product, origination month, risk band, employer group, membership tenure, and
+   affected payroll cohort as segmentation dimensions.
+7. Use `openpyxl` for workbook inspection and DuckDB only after complete application validation.
+8. Treat the designed equality between the £6,000 August payment shortfall and £6,000 arrears
+   increase as an association, not a causal or complete accounting roll-forward.
+9. Generate readable analysis from deterministic templates and defer narrative generation or
+   combined policy answers to a separately approved later gate.
 
-## Errors
+## Approval state
 
-- Blank input produces a local warning and makes no service call.
-- Application retrieval or generation errors produce one user-readable availability message.
-- Unexpected exceptions produce a generic message while local logs retain developer diagnostics.
-- A missing or incompatible index and missing settings fail through existing application errors.
-- No exception detail, credential, or stack trace is rendered in the page.
+- [x] Gates 0–5.5 are formally accepted.
+- [x] The Gate 6 design, scenario, metrics, validation rules, tests, and exclusions are documented.
+- [x] ADR 0007 is preserved as proposed rather than accepted.
+- [ ] The owner approves or amends the two proposed dependencies.
+- [ ] The owner approves or amends all nine design assumptions.
+- [ ] The owner authorizes Gate 6 implementation to begin.
 
-## Verification
+## Explicitly not started
 
-- Unit tests prove that the UI integration invokes the existing answer path once.
-- A deterministic interleaving test proves that two concurrent questions retain their own evidence
-  and citations instead of sharing recorder state.
-- Citation metadata and exact retrieval evidence are preserved.
-- Empty retrieval retains the accepted insufficient-evidence result and bypasses generation.
-- The Pinecone data wrapper exposes query but no upsert operation.
-- The Streamlit module imports and the local application launches successfully.
-- One current-policy question, one version-sensitive question, one cross-document question, and one
-  unsupported question are inspected through the UI only when their provider calls are authorized.
-- The complete deterministic suite and repository checks must remain passing.
+- Dependency installation
+- Synthetic workbook creation
+- DuckDB creation or schema work
+- Analytics models, adapters, SQL, services, reports, or tests
+- Changes to RAG, retrieval, generation, evaluation, or the Streamlit UI
+- Gate 7 work
 
-Local verification on **2026-09-13** confirmed that the page launches, the synthetic-data notice and
-five examples render, blank input remains local, and retrieval details are collapsed by default.
-The complete deterministic suite passed **206 tests** with the three authorization-gated live tests
-skipped; Ruff, dependency health, imports, and whitespace checks passed.
-
-Four authorized questions were then submitted through the page. The current Join and Borrow limit
-and minimum-score questions cited the current Lending and Affordability Policy v4.0 on page 4. The
-payroll-failure question combined current Onboarding v2.2 page 6 and Credit Control v3.0 page 6.
-The cryptocurrency question returned `INSUFFICIENT_EVIDENCE` without sources. The expanded
-retrieval panel displayed application-owned rank, similarity score, version, status, page, and
-source-text previews. These four checks issued query-only provider operations; no index creation or
-vector mutation path was exposed.
-
-Owner review then identified that the cached service retained one mutable recorder across calls.
-The blocker was corrected by moving the recorder and grounded-answer coordinator inside `ask()`.
-A deterministic two-thread regression test forces the first generation to pause while the second
-question completes and proves that each result retains its own evidence and citation. Post-fix
-verification passed **207 tests** with three live tests skipped; Ruff, dependency health, imports,
-and whitespace checks passed.
-
-## Out of scope
-
-- Gate 6 structured analytics, Excel, DuckDB, or management-information dashboards
-- Retrieval, chunking, embedding, prompt, or generation changes
-- Hybrid search, lexical search, reranking, or threshold calibration
-- Evaluation dashboards or hard-coded evaluation percentages
-- Historical-mode controls beyond the accepted current-only default path
-- APIs, custom JavaScript, elaborate CSS, authentication, user management, or persistence
-- GraphRAG, Neo4j, external web retrieval, orchestration, agents, memory, or voice
-- Deployment and the final NPCU product interface
-- Gate 7 implementation
-
-## Exit criteria
-
-- [x] CR-001 records the reason, scope, constraints, and effect on Gate 6
-- [x] The Gate 6 design checkpoint is preserved separately without implementation
-- [x] Streamlit is the sole new runtime dependency
-- [x] The UI reuses the accepted RAG services and contains no RAG business logic
-- [x] Grounded answers, authoritative citations, and fallback status remain distinct
-- [x] Retrieval details use only existing application evidence and scores
-- [x] Live Pinecone composition cannot create, update, upsert, or delete remote data
-- [x] Focused deterministic UI-boundary tests pass
-- [x] The Streamlit application launches and is inspected locally
-- [x] Authorized demonstration questions show expected answer, citation, version, and fallback behavior
-- [x] The complete tests, Ruff, dependencies, imports, whitespace, credential, and scope checks pass
-- [x] Documentation describes the implemented interface and exact launch command
-- [x] One local implementation commit contains the Gate 5.5 change
-- [x] Gate 5.5 remains pending owner review; Gate 6 implementation and Gate 7 have not started
+The next valid action is an explicit owner design-approval decision. Implementation must remain
+paused until that decision is recorded in the architecture documents.

@@ -1,11 +1,10 @@
 # Project state
 
 - **Project:** NPCU GenAI Intelligence Lab
-- **Current gate:** Gate 5.5 — Coursework Demonstration UI — implementation verified locally and
-  pending owner review under CR-001
-- **Current implementation:** Capabilities accepted through Gate 5 plus a thin Streamlit coursework
-  interface over the existing grounded-answer service; Gate 6 analytics remains paused at its
-  preserved design checkpoint
+- **Current gate:** Gate 6 — Structured Management Analytics — design approval pending; no Gate 6
+  implementation has started
+- **Current implementation:** Capabilities accepted through Gate 5.5, including the thin Streamlit
+  coursework interface over the grounded-answer service
 - **Implemented external AI technologies:** OpenAI `text-embedding-3-small`, Pinecone Serverless, and
   a live-verified OpenAI `gpt-5.6-terra` Responses adapter
 
@@ -15,10 +14,11 @@
   repository as **Gate 5.5** under CR-001 at commit `42b0c73`.
 - Do **not** run that older Gate 6.5 implementation prompt against this checkout. Doing so would
   duplicate completed work and could create conflicting edits.
-- The only current action is owner review and, if requested, formal acceptance of Gate 5.5.
-- After Gate 5.5 is accepted, resume Gate 6 from
-  `docs/gate_designs/GATE_6_STRUCTURED_ANALYTICS_CHECKPOINT.md`; do not redesign it from the old UI
-  prompt.
+- Gate 5.5 was formally accepted on **2026-09-19** after the request-local evidence correction and
+  complete offline verification.
+- The only current action is owner review of
+  `docs/gate_designs/GATE_6_STRUCTURED_ANALYTICS_CHECKPOINT.md` and explicit approval or amendment of
+  its dependencies and nine assumptions. Do not begin Gate 6 implementation before that approval.
 - Only one Codex task should make changes in this checkout at a time. Other Codex surfaces may review
   the committed diff, but should not independently implement the same gate.
 
@@ -68,10 +68,11 @@ its automated measures do not establish semantic correctness, completeness, prod
 fairness, or safety. Human ratings remain pending, and live provider rankings and prose may change.
 
 Gate 6 entered its documentation-only design checkpoint on 2026-09-13 from clean, synchronized
-commit `1070ab5`. Its proposal was preserved at local commit `1f5d381`. No analytics dependency,
-workbook, database, or implementation exists. CR-001 temporarily pauses that work and inserts Gate
-5.5, a minimal Streamlit coursework interface over the accepted RAG path. Gate 6 will resume only
-after Gate 5.5 review; Gate 7 has not started.
+commit `1070ab5`. Its proposal was preserved at commit `1f5d381`. No analytics dependency,
+workbook, database, or implementation exists. CR-001 inserted Gate 5.5, a minimal Streamlit
+coursework interface over the accepted RAG path. Gate 5.5 was formally accepted on 2026-09-19, so
+Gate 6 is now awaiting explicit approval of its preserved design checkpoint. Gate 7 has not
+started.
 
 ## Planned future capability areas
 
